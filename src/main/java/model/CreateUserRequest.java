@@ -16,4 +16,11 @@ public class CreateUserRequest {
     @NonNull
     String password;
     String fullName;
+    String address;
+    String dob;
+    String employment;
+    String industry;
+    String nationality;
+    String profilePic;
+    String visaExpDate;
 }
