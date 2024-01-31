@@ -1,2 +1,4 @@
-package model;public class UserLoginRequest {
+package model;
+
+public class UserLoginRequest {
 }
