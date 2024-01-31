@@ -1,6 +1,10 @@
 package model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
 
 @NoArgsConstructor
 @Getter

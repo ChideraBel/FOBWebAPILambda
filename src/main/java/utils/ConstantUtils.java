@@ -1,6 +1,9 @@
 package utils;
 
 public class ConstantUtils {
+
+    public static String ERROR = "ERROR";
+    public static String SUCCESS = "SUCCESS";
     public static String FOB_USER_TABLE = "FOBUserTable";
     public static String USER_ID = "user_id";
     public static String PASSWORD = "password";
