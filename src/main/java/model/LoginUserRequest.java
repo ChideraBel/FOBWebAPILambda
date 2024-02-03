@@ -1,18 +1,23 @@
 package model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
-import lombok.AllArgsConstructor;
+import lombok.*;
+
+import java.util.Map;
 
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
+@Builder
 @AllArgsConstructor
 public class LoginUserRequest {
     @NonNull
     String email;
     @NonNull
     String password;
+
+    public static LoginUserRequest fromMap(Map<String, String> map){
+        return LoginUserRequest.builder()
+                .email(map.get("email"))
+                .password(map.get("password"))
+                .build();
+    }
 }

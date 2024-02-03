@@ -15,16 +15,15 @@ import java.util.Date;
 
 import static utils.ConstantUtils.*;
 
-public class CreateUserLambda implements RequestHandler<CreateUserRequest, UserResponse> {
-    private static UserDao userDao;
-    private static UserProfileDao userProfileDao;
-    public CreateUserLambda() {
-        userDao = new UserDao();
-        userProfileDao = new UserProfileDao();
+public class CreateUserLambda {
+    private final UserDao userDao;
+    private final UserProfileDao userProfileDao;
+    public CreateUserLambda(UserDao userDao, UserProfileDao userProfileDao) {
+        this.userDao = userDao;
+        this.userProfileDao = userProfileDao;
     }
 
-    @Override
-    public UserResponse handleRequest(CreateUserRequest request, Context context) {
+    public UserResponse createUser(CreateUserRequest request, Context context) {
         Instant dateInstant = new Date().toInstant();
         String currentDate = DateTimeFormatter.ISO_INSTANT.format(dateInstant);
 

@@ -1,14 +1,12 @@
 package model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
-import lombok.AllArgsConstructor;
+import lombok.*;
+
+import java.util.Map;
 
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
+@Builder
 @AllArgsConstructor
 public class CreateUserRequest {
     @NonNull
@@ -23,4 +21,19 @@ public class CreateUserRequest {
     String nationality;
     String profilePic;
     String visaExpDate;
+
+    public static CreateUserRequest fromMap(Map<String, String> map){
+        return CreateUserRequest.builder()
+                .email(map.get("email"))
+                .password(map.get("password"))
+                .fullName(map.get("fullName"))
+                .address(map.get("address"))
+                .dob(map.get("dob"))
+                .employment(map.get("employment"))
+                .industry(map.get("industry"))
+                .nationality(map.get("nationality"))
+                .profilePic(map.get("profilePic"))
+                .visaExpDate(map.get("visaExpDate"))
+                .build();
+    }
 }

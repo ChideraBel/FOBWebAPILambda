@@ -12,17 +12,16 @@ import model.UserResponse;
 import static utils.ConstantUtils.ERROR;
 import static utils.ConstantUtils.SUCCESS;
 
-public class DeleteUserLambda implements RequestHandler<DeleteUserRequest, UserResponse> {
+public class DeleteUserLambda {
 
-    private static UserDao userDao;
-    private static UserProfileDao userProfileDao;
-    public DeleteUserLambda() {
-        userDao = new UserDao();
-        userProfileDao = new UserProfileDao();
+    private final UserDao userDao;
+    private final UserProfileDao userProfileDao;
+    public DeleteUserLambda(UserDao userDao, UserProfileDao userProfileDao) {
+        this.userDao = userDao;
+        this.userProfileDao = userProfileDao;
     }
 
-    @Override
-    public UserResponse handleRequest(DeleteUserRequest request, Context context){
+    public UserResponse deleteUser(DeleteUserRequest request, Context context){
         String userId = request.getEmail();
 
         final DynamoDBUser user = userDao.getUser(userId);

@@ -4,6 +4,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import dao.UserDao;
 import dao.dbModels.DynamoDBUser;
+import lombok.AllArgsConstructor;
 import model.LoginUserRequest;
 import model.UserResponse;
 
@@ -13,14 +14,13 @@ import java.util.Date;
 
 import static utils.ConstantUtils.*;
 
-public class LoginUserLambda implements RequestHandler<LoginUserRequest, UserResponse> {
-    private static UserDao userDao;
-    public LoginUserLambda() {
-        userDao = new UserDao();
-    }
+public class LoginUserLambda {
+    private final UserDao userDao;
 
-    @Override
-    public UserResponse handleRequest(LoginUserRequest request, Context context) {
+    public LoginUserLambda(UserDao userDao) {
+        this.userDao = userDao;
+    }
+    public UserResponse loginUser(LoginUserRequest request, Context context) {
         Instant dateInstant = new Date().toInstant();
         String currentDate = DateTimeFormatter.ISO_INSTANT.format(dateInstant);
 
@@ -36,7 +36,6 @@ public class LoginUserLambda implements RequestHandler<LoginUserRequest, UserRes
 
         user.setLast_login(currentDate);
         userDao.save(user);
-
         return new UserResponse(SUCCESS, "Login successful");
     }
 }
