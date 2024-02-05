@@ -26,6 +26,11 @@ public class MainLambda implements RequestHandler<Request, UserResponse> {
         createUserLambda = new CreateUserLambda(userDao, userProfileDao);
     }
 
+    /*
+    Handles the request sent to the lambda function and routes to the corresponding lambda function code
+    for that request.
+     */
+
     @Override
     public UserResponse handleRequest(Request request, Context context){
         switch (request.getRequestType()){
