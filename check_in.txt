@@ -1,0 +1,1 @@
+Once you set up your branch and the codebase locally. Add your name to this file with "cheked in!" and commit to your branch.
