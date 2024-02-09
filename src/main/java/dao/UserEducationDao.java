@@ -14,7 +14,7 @@ public class UserEducationDao {
     private DynamoDBMapper mapper;
 
     /*
-   Gets all the education entities fo the specified userId
+   Gets all the education entities for the specified userId
     */
     public List<DynamoDBUserEducation> getAllEducationEntitiesForUser(@NonNull final String userId) {
         DynamoDBUserEducation education = new DynamoDBUserEducation();
