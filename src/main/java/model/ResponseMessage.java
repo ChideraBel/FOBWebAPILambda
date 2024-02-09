@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @Data
 @AllArgsConstructor
-public class UserResponse {
+public class ResponseMessage {
     String responseType;
     String message;
 }

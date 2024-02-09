@@ -1,38 +1,57 @@
 package org.tranqwave.fobwebapilambda;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import dao.UserDao;
+import dao.UserEducationDao;
 import dao.UserProfileDao;
-import model.*;
+import model.AddEducationRequest;
+import model.CreateUserRequest;
+import model.DeleteUserRequest;
+import model.LoginUserRequest;
+import model.Request;
+import model.ResponseMessage;
+import org.tranqwave.fobwebapilambda.user.AddUserEducationLambda;
 import org.tranqwave.fobwebapilambda.user.CreateUserLambda;
 import org.tranqwave.fobwebapilambda.user.DeleteUserLambda;
 import org.tranqwave.fobwebapilambda.user.LoginUserLambda;
 
-import static utils.ConstantUtils.RequestTypes.*;
+import static utils.ConstantUtils.RequestTypes.ADD_USER_EDUCATION;
+import static utils.ConstantUtils.RequestTypes.CREATE_USER_REQUEST;
+import static utils.ConstantUtils.RequestTypes.DELETE_USER_REQUEST;
+import static utils.ConstantUtils.RequestTypes.LOGIN_USER_REQUEST;
 
-public class MainLambda implements RequestHandler<Request, UserResponse> {
+public class MainLambda implements RequestHandler<Request, ResponseMessage> {
     private final UserDao userDao;
     private final UserProfileDao userProfileDao;
+    private final UserEducationDao userEducationDao;
 
     private final LoginUserLambda loginUserLambda;
     private final DeleteUserLambda deleteUserLambda;
     private final CreateUserLambda createUserLambda;
+    private final AddUserEducationLambda addUserEducationLambda;
     public MainLambda() {
-        userDao = new UserDao();
-        userProfileDao = new UserProfileDao();
+        final AmazonDynamoDB dynamoDBClient = AmazonDynamoDBClientBuilder.defaultClient();
+        final DynamoDBMapper mapper = new DynamoDBMapper(dynamoDBClient);
+
+        userDao = new UserDao(mapper);
+        userProfileDao = new UserProfileDao(mapper);
+        userEducationDao = new UserEducationDao(mapper);
         loginUserLambda = new LoginUserLambda(userDao);
         deleteUserLambda = new DeleteUserLambda(userDao, userProfileDao);
         createUserLambda = new CreateUserLambda(userDao, userProfileDao);
+        addUserEducationLambda = new AddUserEducationLambda(userEducationDao, userDao);
     }
 
     /*
     Handles the request sent to the lambda function and routes to the corresponding lambda function code
     for that request.
      */
-
     @Override
-    public UserResponse handleRequest(Request request, Context context){
+    public ResponseMessage handleRequest(Request request, Context context){
         switch (request.getRequestType()){
             case LOGIN_USER_REQUEST:
                 return loginUserLambda.loginUser(LoginUserRequest.fromMap(request.getRequestBody()), context);
@@ -40,8 +59,10 @@ public class MainLambda implements RequestHandler<Request, UserResponse> {
                 return deleteUserLambda.deleteUser(DeleteUserRequest.fromMap(request.getRequestBody()), context);
             case CREATE_USER_REQUEST:
                 return createUserLambda.createUser(CreateUserRequest.fromMap(request.getRequestBody()), context);
+            case ADD_USER_EDUCATION:
+                return addUserEducationLambda.addEducation(AddEducationRequest.fromMap(request.getRequestBody()), context);
         }
 
-        return new UserResponse();
+        return new ResponseMessage();
     }
 }
