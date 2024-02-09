@@ -1,14 +1,13 @@
 package dao;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import dao.dbModels.DynamoDBUser;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
+@AllArgsConstructor
 public class UserDao {
-    private static final AmazonDynamoDB dynamoDBClient = AmazonDynamoDBClientBuilder.defaultClient();
-    private final DynamoDBMapper mapper = new DynamoDBMapper(dynamoDBClient);
+    private DynamoDBMapper mapper;
 
     public DynamoDBUser getUser(@NonNull final String userId) {
         return mapper.load(DynamoDBUser.class, userId);
