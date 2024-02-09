@@ -10,19 +10,25 @@ import dao.UserEducationDao;
 import dao.UserProfileDao;
 import model.AddEducationRequest;
 import model.CreateUserRequest;
+import model.DeleteEducationRequest;
 import model.DeleteUserRequest;
 import model.LoginUserRequest;
 import model.Request;
 import model.ResponseMessage;
-import org.tranqwave.fobwebapilambda.user.AddUserEducationLambda;
+import model.UpdateEducationRequest;
+import org.tranqwave.fobwebapilambda.resume.AddUserEducationLambda;
+import org.tranqwave.fobwebapilambda.resume.DeleteUserEducationLambda;
+import org.tranqwave.fobwebapilambda.resume.UpdateUserEducationLambda;
 import org.tranqwave.fobwebapilambda.user.CreateUserLambda;
 import org.tranqwave.fobwebapilambda.user.DeleteUserLambda;
 import org.tranqwave.fobwebapilambda.user.LoginUserLambda;
 
 import static utils.ConstantUtils.RequestTypes.ADD_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.CREATE_USER_REQUEST;
+import static utils.ConstantUtils.RequestTypes.DELETE_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_REQUEST;
 import static utils.ConstantUtils.RequestTypes.LOGIN_USER_REQUEST;
+import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EDUCATION;
 
 public class MainLambda implements RequestHandler<Request, ResponseMessage> {
     private final UserDao userDao;
@@ -33,6 +39,9 @@ public class MainLambda implements RequestHandler<Request, ResponseMessage> {
     private final DeleteUserLambda deleteUserLambda;
     private final CreateUserLambda createUserLambda;
     private final AddUserEducationLambda addUserEducationLambda;
+    private final UpdateUserEducationLambda updateUserEducationLambda;
+    private final DeleteUserEducationLambda deleteUserEducationLambda;
+
     public MainLambda() {
         final AmazonDynamoDB dynamoDBClient = AmazonDynamoDBClientBuilder.defaultClient();
         final DynamoDBMapper mapper = new DynamoDBMapper(dynamoDBClient);
@@ -44,6 +53,8 @@ public class MainLambda implements RequestHandler<Request, ResponseMessage> {
         deleteUserLambda = new DeleteUserLambda(userDao, userProfileDao);
         createUserLambda = new CreateUserLambda(userDao, userProfileDao);
         addUserEducationLambda = new AddUserEducationLambda(userEducationDao, userDao);
+        updateUserEducationLambda = new UpdateUserEducationLambda(userEducationDao);
+        deleteUserEducationLambda = new DeleteUserEducationLambda(userEducationDao);
     }
 
     /*
@@ -51,8 +62,8 @@ public class MainLambda implements RequestHandler<Request, ResponseMessage> {
     for that request.
      */
     @Override
-    public ResponseMessage handleRequest(Request request, Context context){
-        switch (request.getRequestType()){
+    public ResponseMessage handleRequest(Request request, Context context) {
+        switch (request.getRequestType()) {
             case LOGIN_USER_REQUEST:
                 return loginUserLambda.loginUser(LoginUserRequest.fromMap(request.getRequestBody()), context);
             case DELETE_USER_REQUEST:
@@ -61,8 +72,11 @@ public class MainLambda implements RequestHandler<Request, ResponseMessage> {
                 return createUserLambda.createUser(CreateUserRequest.fromMap(request.getRequestBody()), context);
             case ADD_USER_EDUCATION:
                 return addUserEducationLambda.addEducation(AddEducationRequest.fromMap(request.getRequestBody()), context);
+            case UPDATE_USER_EDUCATION:
+                return updateUserEducationLambda.updateEducation(UpdateEducationRequest.fromMap(request.getRequestBody()), context);
+            case DELETE_USER_EDUCATION:
+                return deleteUserEducationLambda.deleteEducation(DeleteEducationRequest.fromMap(request.getRequestBody()), context);
         }
-
         return new ResponseMessage();
     }
 }

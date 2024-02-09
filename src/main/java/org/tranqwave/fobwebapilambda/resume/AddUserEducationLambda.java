@@ -1,4 +1,4 @@
-package org.tranqwave.fobwebapilambda.user;
+package org.tranqwave.fobwebapilambda.resume;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import dao.UserDao;

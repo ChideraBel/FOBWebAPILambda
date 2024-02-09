@@ -19,7 +19,7 @@ public class DynamoDBUserEducation {
     @DynamoDBHashKey(attributeName = "user_id")
     public String user_id;
 
-    @DynamoDBRangeKey(attributeName = "SequenceField")
+    @DynamoDBRangeKey(attributeName = "education_id")
     public int education_id;
 
     @DynamoDBAttribute(attributeName = "institution_name")

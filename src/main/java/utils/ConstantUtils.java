@@ -11,6 +11,8 @@ public class ConstantUtils {
         final public static String DELETE_USER_REQUEST = "deleteUser";
 
         final public static String ADD_USER_EDUCATION = "addUserEducation";
+        final public static String DELETE_USER_EDUCATION = "deleteUserEducation";
+        final public static String UPDATE_USER_EDUCATION = "updateUserEducation";
 
     }
 

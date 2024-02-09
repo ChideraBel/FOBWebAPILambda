@@ -12,9 +12,11 @@ import java.util.Map;
 @Data
 @Builder
 @AllArgsConstructor
-public class AddEducationRequest {
+public class UpdateEducationRequest {
     @NonNull
     String email;
+    @NonNull
+    int educationId;
     String institution;
     String degreeType;
     String major;
@@ -22,9 +24,10 @@ public class AddEducationRequest {
     String endDate;
     Double gpa;
 
-    public static AddEducationRequest fromMap(Map<String, String> map) {
-        return AddEducationRequest.builder()
+    public static UpdateEducationRequest fromMap(Map<String, String> map) {
+        return UpdateEducationRequest.builder()
                 .email(map.get("email"))
+                .educationId(Integer.parseInt(map.get("educationId")))
                 .institution(map.get("institution"))
                 .degreeType(map.get("degreeType"))
                 .major(map.get("major"))
