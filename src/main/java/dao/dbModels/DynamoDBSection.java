@@ -12,7 +12,7 @@ import lombok.*;
 public class DynamoDBSection {
 
     @DynamoDBHashKey(attributeName = "section_id")
-    public String section_id;
+    public int section_id;
 
     @DynamoDBAttribute(attributeName = "section_name")
     public String section_name;
