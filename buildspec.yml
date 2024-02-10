@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+  build:
+    commands:
+      - mvn clean package
+  post_build:
+    commands:
+      - aws lambda update-function-code --function-name FobWebApiLambdaCdkStack-FOBWebAPILambdaFunction2E0-0oml1h2AzfBU --zip-file fileb://target/FOBWebAPILambda-1.0-SNAPSHOT.jar
+
+artifacts:
+  files:
+    - target/FOBWebAPILambda-1.0-SNAPSHOT.jar
