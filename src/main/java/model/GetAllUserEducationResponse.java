@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @Data
 @AllArgsConstructor
-public class ResponseMessage {
-    String responseType;
-    String message;
+public class GetAllUserEducationResponse {
+    List<Education> userEducations;
 }

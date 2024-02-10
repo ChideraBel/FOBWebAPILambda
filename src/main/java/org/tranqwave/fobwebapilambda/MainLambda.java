@@ -12,12 +12,13 @@ import model.AddEducationRequest;
 import model.CreateUserRequest;
 import model.DeleteEducationRequest;
 import model.DeleteUserRequest;
+import model.GetAllUserEducationRequest;
 import model.LoginUserRequest;
 import model.Request;
-import model.ResponseMessage;
 import model.UpdateEducationRequest;
 import org.tranqwave.fobwebapilambda.resume.AddUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.DeleteUserEducationLambda;
+import org.tranqwave.fobwebapilambda.resume.GetAllUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserEducationLambda;
 import org.tranqwave.fobwebapilambda.user.CreateUserLambda;
 import org.tranqwave.fobwebapilambda.user.DeleteUserLambda;
@@ -27,10 +28,11 @@ import static utils.ConstantUtils.RequestTypes.ADD_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.CREATE_USER_REQUEST;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_REQUEST;
+import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.LOGIN_USER_REQUEST;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EDUCATION;
 
-public class MainLambda implements RequestHandler<Request, ResponseMessage> {
+public class MainLambda implements RequestHandler<Request, Object> {
     private final UserDao userDao;
     private final UserProfileDao userProfileDao;
     private final UserEducationDao userEducationDao;
@@ -41,6 +43,7 @@ public class MainLambda implements RequestHandler<Request, ResponseMessage> {
     private final AddUserEducationLambda addUserEducationLambda;
     private final UpdateUserEducationLambda updateUserEducationLambda;
     private final DeleteUserEducationLambda deleteUserEducationLambda;
+    private final GetAllUserEducationLambda getAllUserEducationLambda;
 
     public MainLambda() {
         final AmazonDynamoDB dynamoDBClient = AmazonDynamoDBClientBuilder.defaultClient();
@@ -55,6 +58,7 @@ public class MainLambda implements RequestHandler<Request, ResponseMessage> {
         addUserEducationLambda = new AddUserEducationLambda(userEducationDao, userDao);
         updateUserEducationLambda = new UpdateUserEducationLambda(userEducationDao);
         deleteUserEducationLambda = new DeleteUserEducationLambda(userEducationDao);
+        getAllUserEducationLambda = new GetAllUserEducationLambda(userEducationDao);
     }
 
     /*
@@ -62,7 +66,7 @@ public class MainLambda implements RequestHandler<Request, ResponseMessage> {
     for that request.
      */
     @Override
-    public ResponseMessage handleRequest(Request request, Context context) {
+    public Object handleRequest(Request request, Context context) {
         switch (request.getRequestType()) {
             case LOGIN_USER_REQUEST:
                 return loginUserLambda.loginUser(LoginUserRequest.fromMap(request.getRequestBody()), context);
@@ -76,7 +80,9 @@ public class MainLambda implements RequestHandler<Request, ResponseMessage> {
                 return updateUserEducationLambda.updateEducation(UpdateEducationRequest.fromMap(request.getRequestBody()), context);
             case DELETE_USER_EDUCATION:
                 return deleteUserEducationLambda.deleteEducation(DeleteEducationRequest.fromMap(request.getRequestBody()), context);
+            case GET_ALL_USER_EDUCATION:
+                return getAllUserEducationLambda.getAllUserEducation(GetAllUserEducationRequest.fromMap(request.getRequestBody()), context);
         }
-        return new ResponseMessage();
+        throw new IllegalArgumentException(String.format("Bad request input request type: %s", request.getRequestType()));
     }
 }

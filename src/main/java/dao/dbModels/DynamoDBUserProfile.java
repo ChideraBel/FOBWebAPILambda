@@ -13,26 +13,26 @@ import lombok.*;
 public class DynamoDBUserProfile {
 
     @DynamoDBHashKey(attributeName = "user_id")
-    public String user_id;
+    private String user_id;
 
     @DynamoDBAttribute(attributeName = "address")
-    public String address;
+    private String address;
 
     @DynamoDBAttribute(attributeName = "date_of_birth")
-    public String date_of_birth;
+    private String date_of_birth;
 
     @DynamoDBAttribute(attributeName = "employment")
-    public String employment;
+    private String employment;
 
     @DynamoDBAttribute(attributeName = "industry")
-    public String industry;
+    private String industry;
 
     @DynamoDBAttribute(attributeName = "nationality")
-    public String nationality;
+    private String nationality;
 
     @DynamoDBAttribute(attributeName = "profile_picture")
-    public String profile_picture;
+    private String profile_picture;
 
     @DynamoDBAttribute(attributeName = "visa_end_date")
-    public String visa_end_date;
+    private String visa_end_date;
 }

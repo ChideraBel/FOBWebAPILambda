@@ -17,26 +17,26 @@ import lombok.NoArgsConstructor;
 public class DynamoDBUserEducation {
 
     @DynamoDBHashKey(attributeName = "user_id")
-    public String user_id;
+    private String user_id;
 
     @DynamoDBRangeKey(attributeName = "education_id")
-    public int education_id;
+    private int education_id;
 
     @DynamoDBAttribute(attributeName = "institution_name")
-    public String institution_name;
+    private String institution_name;
 
     @DynamoDBAttribute(attributeName = "degree_type")
-    public String degree_type;
+    private String degree_type;
 
     @DynamoDBAttribute(attributeName = "major")
-    public String major;
+    private String major;
 
     @DynamoDBAttribute(attributeName = "start_date")
-    public String start_date;
+    private String start_date;
 
     @DynamoDBAttribute(attributeName = "end_date")
-    public String end_date;
+    private String end_date;
 
     @DynamoDBAttribute(attributeName = "gpa")
-    public double gpa;
+    private double gpa;
 }

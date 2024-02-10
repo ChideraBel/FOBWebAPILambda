@@ -21,7 +21,6 @@ public class DeleteUserEducationLambda {
     /*
     Deletes an education entity for the specified user in the request
      */
-
     public ResponseMessage deleteEducation(DeleteEducationRequest request, Context context) {
         int educationId = request.getEducationId();
 
