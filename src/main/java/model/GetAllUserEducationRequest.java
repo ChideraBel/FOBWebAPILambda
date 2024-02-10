@@ -12,16 +12,13 @@ import java.util.Map;
 @Data
 @Builder
 @AllArgsConstructor
-public class LoginUserRequest {
+public class GetAllUserEducationRequest {
     @NonNull
     String email;
-    @NonNull
-    String password;
 
-    public static LoginUserRequest fromMap(Map<String, String> map){
-        return LoginUserRequest.builder()
+    public static GetAllUserEducationRequest fromMap(Map<String, String> map) {
+        return GetAllUserEducationRequest.builder()
                 .email(map.get("email"))
-                .password(map.get("password"))
                 .build();
     }
 }

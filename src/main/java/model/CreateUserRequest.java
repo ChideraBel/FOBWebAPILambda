@@ -1,6 +1,10 @@
 package model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.Map;
 
@@ -22,7 +26,7 @@ public class CreateUserRequest {
     String profilePic;
     String visaExpDate;
 
-    public static CreateUserRequest fromMap(Map<String, String> map){
+    public static CreateUserRequest fromMap(Map<String, String> map) {
         return CreateUserRequest.builder()
                 .email(map.get("email"))
                 .password(map.get("password"))

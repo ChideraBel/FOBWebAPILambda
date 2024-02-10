@@ -1,19 +1,19 @@
 package org.tranqwave.fobwebapilambda.user;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
 import dao.UserDao;
 import dao.UserProfileDao;
 import dao.dbModels.DynamoDBUser;
 import dao.dbModels.DynamoDBUserProfile;
 import model.CreateUserRequest;
-import model.UserResponse;
+import model.ResponseMessage;
 
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-import static utils.ConstantUtils.*;
+import static utils.ConstantUtils.ERROR;
+import static utils.ConstantUtils.SUCCESS;
 
 public class CreateUserLambda {
     private final UserDao userDao;
@@ -23,14 +23,17 @@ public class CreateUserLambda {
         this.userProfileDao = userProfileDao;
     }
 
-    public UserResponse createUser(CreateUserRequest request, Context context) {
+    /*
+    Creates a new user and user profile.
+     */
+    public ResponseMessage createUser(CreateUserRequest request, Context context) {
         Instant dateInstant = new Date().toInstant();
         String currentDate = DateTimeFormatter.ISO_INSTANT.format(dateInstant);
 
         final DynamoDBUser user = userDao.getUser(request.getEmail());
 
         if (user != null)
-            return new UserResponse(ERROR, String.format("Account with email %s already exists", request.getEmail()));
+            return new ResponseMessage(ERROR, String.format("Account with email %s already exists", request.getEmail()));
 
         final DynamoDBUser newUser = new DynamoDBUser(request.getEmail(), request.getPassword(), request.getFullName(), currentDate, currentDate);
         userDao.save(newUser);
@@ -48,6 +51,6 @@ public class CreateUserLambda {
 
         userProfileDao.save(newUserProfile);
 
-        return new UserResponse(SUCCESS, "Account registered successfully");
+        return new ResponseMessage(SUCCESS, "Account registered successfully");
     }
 }

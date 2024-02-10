@@ -12,16 +12,16 @@ import java.util.Map;
 @Data
 @Builder
 @AllArgsConstructor
-public class LoginUserRequest {
+public class DeleteEducationRequest {
     @NonNull
     String email;
     @NonNull
-    String password;
+    int educationId;
 
-    public static LoginUserRequest fromMap(Map<String, String> map){
-        return LoginUserRequest.builder()
+    public static DeleteEducationRequest fromMap(Map<String, String> map){
+        return DeleteEducationRequest.builder()
+                .educationId(Integer.parseInt(map.get("educationId")))
                 .email(map.get("email"))
-                .password(map.get("password"))
                 .build();
     }
 }

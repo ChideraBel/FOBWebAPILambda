@@ -1,1 +1,3 @@
 Once you set up your branch and the codebase locally, add your name to this file with "checked in!" and commit to your branch.
+
+Chi checked in!
