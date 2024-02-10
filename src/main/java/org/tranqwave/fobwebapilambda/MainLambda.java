@@ -9,7 +9,16 @@ import dao.SectionDao;
 import dao.UserDao;
 import dao.UserEducationDao;
 import dao.UserProfileDao;
-import model.*;
+
+import model.AddEducationRequest;
+import model.CreateSectionRequest;
+import model.CreateUserRequest;
+import model.DeleteEducationRequest;
+import model.DeleteUserRequest;
+import model.GetAllUserEducationRequest;
+import model.LoginUserRequest;
+import model.Request;
+import model.UpdateEducationRequest;
 import org.tranqwave.fobwebapilambda.resume.AddUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.DeleteUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.GetAllUserEducationLambda;
@@ -19,7 +28,15 @@ import org.tranqwave.fobwebapilambda.user.CreateUserLambda;
 import org.tranqwave.fobwebapilambda.user.DeleteUserLambda;
 import org.tranqwave.fobwebapilambda.user.LoginUserLambda;
 
-import static utils.ConstantUtils.RequestTypes.*;
+import static utils.ConstantUtils.RequestTypes.ADD_USER_EDUCATION;
+import static utils.ConstantUtils.RequestTypes.CREATE_SECTION_REQUEST;
+import static utils.ConstantUtils.RequestTypes.CREATE_USER_REQUEST;
+import static utils.ConstantUtils.RequestTypes.DELETE_USER_EDUCATION;
+import static utils.ConstantUtils.RequestTypes.DELETE_USER_REQUEST;
+import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EDUCATION;
+import static utils.ConstantUtils.RequestTypes.LOGIN_USER_REQUEST;
+import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EDUCATION;
+
 
 public class MainLambda implements RequestHandler<Request, Object> {
     private final UserDao userDao;

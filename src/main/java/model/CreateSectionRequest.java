@@ -10,8 +10,6 @@ import java.util.Map;
 @AllArgsConstructor
 public class CreateSectionRequest {
     @NonNull
-    String sectionId;
-    @NonNull
     String name;
     @NonNull
     String content;
