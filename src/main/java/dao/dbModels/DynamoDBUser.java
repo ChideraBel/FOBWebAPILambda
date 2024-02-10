@@ -12,17 +12,17 @@ import lombok.*;
 public class DynamoDBUser {
 
     @DynamoDBHashKey(attributeName = "user_id")
-    public String user_id;
+    private String user_id;
 
     @DynamoDBAttribute(attributeName = "password")
-    public String password;
+    private String password;
 
     @DynamoDBAttribute(attributeName = "full_name")
-    public String fullname;
+    private String fullname;
 
     @DynamoDBAttribute(attributeName = "last_login")
-    public String last_login;
+    private String last_login;
 
     @DynamoDBAttribute(attributeName = "date_registered")
-    public String date_registered;
+    private String date_registered;
 }
