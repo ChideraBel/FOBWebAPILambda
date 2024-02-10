@@ -6,14 +6,15 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import dao.dbModels.DynamoDBSection;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 
 import java.util.List;
-
+@AllArgsConstructor
 public class SectionDao {
 
-    private static final AmazonDynamoDB dynamoDBClient = AmazonDynamoDBClientBuilder.defaultClient();
-    private final DynamoDBMapper mapper = new DynamoDBMapper(dynamoDBClient);
+
+    private final DynamoDBMapper mapper;
 
     public DynamoDBSection getSection(@NonNull final String sectionId) { return mapper.load(DynamoDBSection.class, sectionId);}
 

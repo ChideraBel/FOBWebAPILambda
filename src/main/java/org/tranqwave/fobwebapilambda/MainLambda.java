@@ -5,37 +5,28 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import dao.SectionDao;
 import dao.UserDao;
 import dao.UserEducationDao;
 import dao.UserProfileDao;
-import model.AddEducationRequest;
-import model.CreateUserRequest;
-import model.DeleteEducationRequest;
-import model.DeleteUserRequest;
-import model.GetAllUserEducationRequest;
-import model.LoginUserRequest;
-import model.Request;
-import model.UpdateEducationRequest;
+import model.*;
 import org.tranqwave.fobwebapilambda.resume.AddUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.DeleteUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.GetAllUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserEducationLambda;
+import org.tranqwave.fobwebapilambda.section.CreateSectionLambda;
 import org.tranqwave.fobwebapilambda.user.CreateUserLambda;
 import org.tranqwave.fobwebapilambda.user.DeleteUserLambda;
 import org.tranqwave.fobwebapilambda.user.LoginUserLambda;
 
-import static utils.ConstantUtils.RequestTypes.ADD_USER_EDUCATION;
-import static utils.ConstantUtils.RequestTypes.CREATE_USER_REQUEST;
-import static utils.ConstantUtils.RequestTypes.DELETE_USER_EDUCATION;
-import static utils.ConstantUtils.RequestTypes.DELETE_USER_REQUEST;
-import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EDUCATION;
-import static utils.ConstantUtils.RequestTypes.LOGIN_USER_REQUEST;
-import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EDUCATION;
+import static utils.ConstantUtils.RequestTypes.*;
 
 public class MainLambda implements RequestHandler<Request, Object> {
     private final UserDao userDao;
     private final UserProfileDao userProfileDao;
     private final UserEducationDao userEducationDao;
+
+    private final SectionDao sectionDao;
 
     private final LoginUserLambda loginUserLambda;
     private final DeleteUserLambda deleteUserLambda;
@@ -45,6 +36,8 @@ public class MainLambda implements RequestHandler<Request, Object> {
     private final DeleteUserEducationLambda deleteUserEducationLambda;
     private final GetAllUserEducationLambda getAllUserEducationLambda;
 
+    private final CreateSectionLambda createSectionLambda;
+
     public MainLambda() {
         final AmazonDynamoDB dynamoDBClient = AmazonDynamoDBClientBuilder.defaultClient();
         final DynamoDBMapper mapper = new DynamoDBMapper(dynamoDBClient);
@@ -52,6 +45,7 @@ public class MainLambda implements RequestHandler<Request, Object> {
         userDao = new UserDao(mapper);
         userProfileDao = new UserProfileDao(mapper);
         userEducationDao = new UserEducationDao(mapper);
+        sectionDao = new SectionDao(mapper);
         loginUserLambda = new LoginUserLambda(userDao);
         deleteUserLambda = new DeleteUserLambda(userDao, userProfileDao);
         createUserLambda = new CreateUserLambda(userDao, userProfileDao);
@@ -59,6 +53,7 @@ public class MainLambda implements RequestHandler<Request, Object> {
         updateUserEducationLambda = new UpdateUserEducationLambda(userEducationDao);
         deleteUserEducationLambda = new DeleteUserEducationLambda(userEducationDao);
         getAllUserEducationLambda = new GetAllUserEducationLambda(userEducationDao);
+        createSectionLambda = new CreateSectionLambda(sectionDao);
     }
 
     /*
@@ -82,6 +77,8 @@ public class MainLambda implements RequestHandler<Request, Object> {
                 return deleteUserEducationLambda.deleteEducation(DeleteEducationRequest.fromMap(request.getRequestBody()), context);
             case GET_ALL_USER_EDUCATION:
                 return getAllUserEducationLambda.getAllUserEducation(GetAllUserEducationRequest.fromMap(request.getRequestBody()), context);
+            case CREATE_SECTION_REQUEST:
+                return createSectionLambda.createSection(CreateSectionRequest.fromMap(request.getRequestBody()));
         }
         throw new IllegalArgumentException(String.format("Bad request input request type: %s", request.getRequestType()));
     }
