@@ -8,7 +8,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@DynamoDBTable(tableName = "FOBUserTable")
+@DynamoDBTable(tableName = "FOBSectionTable")
 public class DynamoDBSection {
 
     @DynamoDBHashKey(attributeName = "section_id")
