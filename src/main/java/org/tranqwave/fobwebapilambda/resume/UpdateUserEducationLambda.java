@@ -23,7 +23,7 @@ public class UpdateUserEducationLambda {
      */
 
     public ResponseMessage updateEducation(UpdateEducationRequest request, Context context) {
-        int educationId = request.getEducationId();
+        final int educationId = request.getEducationId();
 
         final Optional<DynamoDBUserEducation> userEducationOptional = userEducationDao.getEducationEntityForUser(request.getEmail(), educationId);
 

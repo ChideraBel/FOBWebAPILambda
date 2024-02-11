@@ -12,25 +12,23 @@ import java.util.Map;
 @Data
 @Builder
 @AllArgsConstructor
-public class AddEducationRequest {
+public class AddExperienceRequest {
     @NonNull
     String email;
-    String institution;
-    String degreeType;
-    String major;
+    String company;
+    String role;
     String startDate;
     String endDate;
-    double gpa;
+    String jobDescription;
 
-    public static AddEducationRequest fromMap(Map<String, String> map) {
-        return AddEducationRequest.builder()
+    public static AddExperienceRequest fromMap(Map<String, String> map) {
+        return AddExperienceRequest.builder()
                 .email(map.get("email"))
-                .institution(map.get("institution"))
-                .degreeType(map.get("degreeType"))
-                .major(map.get("major"))
+                .company(map.get("company"))
+                .role(map.get("role"))
                 .startDate(map.get("startDate"))
                 .endDate(map.get("endDate"))
-                .gpa(Double.valueOf(map.get("gpa")))
+                .jobDescription(map.get("jobDescription"))
                 .build();
     }
 }
