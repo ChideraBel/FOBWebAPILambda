@@ -23,8 +23,7 @@ public class UserEducationDao {
         DynamoDBQueryExpression<DynamoDBUserEducation> queryExpression = new DynamoDBQueryExpression<DynamoDBUserEducation>()
                 .withHashKeyValues(education);
 
-        final List<DynamoDBUserEducation> userEducationList = mapper.query(DynamoDBUserEducation.class, queryExpression);
-        return userEducationList;
+        return mapper.query(DynamoDBUserEducation.class, queryExpression);
     }
 
     /*
@@ -40,7 +39,7 @@ public class UserEducationDao {
         return Optional.ofNullable(mapper.load(DynamoDBUserEducation.class, userId, educationId));
     }
 
-    public void save(DynamoDBUserEducation dynamoDBUserEducation) {
+    public void save(@NonNull final DynamoDBUserEducation dynamoDBUserEducation) {
         mapper.save(dynamoDBUserEducation);
     }
 
