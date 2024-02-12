@@ -22,7 +22,7 @@ public class GetAllUserEducationLambda {
     Gets all education entity for the specified user in the request
      */
     public GetAllUserEducationResponse getAllUserEducation(@NonNull final GetAllUserEducationRequest request, Context context) {
-        final List<DynamoDBUserEducation> dynamoDBUserEducations = userEducationDao.getAllEducationEntitiesForUser(request.getEmail());
+        final List<DynamoDBUserEducation> dynamoDBUserEducations = userEducationDao.getAllUserEducation(request.getEmail());
 
         if (dynamoDBUserEducations.isEmpty())
             throw new IllegalArgumentException(String.format("Cannot find education details for user: %s", request.getEmail()));
