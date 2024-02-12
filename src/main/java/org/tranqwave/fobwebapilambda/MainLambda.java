@@ -11,26 +11,35 @@ import dao.UserEducationDao;
 import dao.UserExperienceDao;
 import dao.UserProfileDao;
 
+import dao.UserSkillDao;
 import model.AddEducationRequest;
+import model.AddSkillRequest;
 import model.CreateSectionRequest;
 import model.AddExperienceRequest;
 import model.CreateUserRequest;
 import model.DeleteEducationRequest;
 import model.DeleteExperienceRequest;
+import model.DeleteSkillRequest;
 import model.DeleteUserRequest;
 import model.GetAllUserEducationRequest;
 import model.GetAllUserExperienceRequest;
+import model.GetAllUserSkillRequest;
 import model.LoginUserRequest;
 import model.Request;
 import model.UpdateEducationRequest;
 import model.UpdateExperienceRequest;
+import model.UpdateSkillRequest;
 import org.tranqwave.fobwebapilambda.resume.AddUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.AddUserExperienceLambda;
+import org.tranqwave.fobwebapilambda.resume.AddUserSkillLambda;
 import org.tranqwave.fobwebapilambda.resume.DeleteUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.DeleteUserExperienceLambda;
+import org.tranqwave.fobwebapilambda.resume.DeleteUserSkillLambda;
 import org.tranqwave.fobwebapilambda.resume.GetAllUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.GetAllUserExperienceLambda;
+import org.tranqwave.fobwebapilambda.resume.GetAllUserSkillLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserEducationLambda;
+import org.tranqwave.fobwebapilambda.resume.UpdateUserSkillLambda;
 import org.tranqwave.fobwebapilambda.section.CreateSectionLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserExperienceLambda;
 import org.tranqwave.fobwebapilambda.user.CreateUserLambda;
@@ -38,17 +47,21 @@ import org.tranqwave.fobwebapilambda.user.DeleteUserLambda;
 import org.tranqwave.fobwebapilambda.user.LoginUserLambda;
 
 import static utils.ConstantUtils.RequestTypes.ADD_USER_EDUCATION;
+import static utils.ConstantUtils.RequestTypes.ADD_USER_SKILL;
 import static utils.ConstantUtils.RequestTypes.CREATE_SECTION_REQUEST;
 import static utils.ConstantUtils.RequestTypes.ADD_USER_EXPERIENCE;
 import static utils.ConstantUtils.RequestTypes.CREATE_USER_REQUEST;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_EXPERIENCE;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_REQUEST;
+import static utils.ConstantUtils.RequestTypes.DELETE_USER_SKILL;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EXPERIENCE;
+import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_SKILL;
 import static utils.ConstantUtils.RequestTypes.LOGIN_USER_REQUEST;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EXPERIENCE;
+import static utils.ConstantUtils.RequestTypes.UPDATE_USER_SKILL;
 
 
 public class MainLambda implements RequestHandler<Request, Object> {
@@ -63,8 +76,11 @@ public class MainLambda implements RequestHandler<Request, Object> {
     private final UpdateUserExperienceLambda updateUserExperienceLambda;
     private final DeleteUserExperienceLambda deleteUserExperienceLambda;
     private final GetAllUserExperienceLambda getAllUserExperienceLambda;
-
     private final CreateSectionLambda createSectionLambda;
+    private final AddUserSkillLambda addUserSkillLambda;
+    private final DeleteUserSkillLambda deleteUserSkillLambda;
+    private final GetAllUserSkillLambda getAllUserSkillLambda;
+    private final UpdateUserSkillLambda updateUserSkillLambda;
 
     public MainLambda() {
         final AmazonDynamoDB dynamoDBClient = AmazonDynamoDBClientBuilder.defaultClient();
@@ -75,6 +91,8 @@ public class MainLambda implements RequestHandler<Request, Object> {
         final UserEducationDao userEducationDao = new UserEducationDao(mapper);
         final SectionDao sectionDao = new SectionDao(mapper);
         final UserExperienceDao userExperienceDao = new UserExperienceDao(mapper);
+        final UserSkillDao userSkillDao = new UserSkillDao(mapper);
+
         loginUserLambda = new LoginUserLambda(userDao);
         deleteUserLambda = new DeleteUserLambda(userDao, userProfileDao);
         createUserLambda = new CreateUserLambda(userDao, userProfileDao);
@@ -87,6 +105,10 @@ public class MainLambda implements RequestHandler<Request, Object> {
         updateUserExperienceLambda = new UpdateUserExperienceLambda(userExperienceDao);
         deleteUserExperienceLambda = new DeleteUserExperienceLambda(userExperienceDao);
         getAllUserExperienceLambda = new GetAllUserExperienceLambda(userExperienceDao);
+        addUserSkillLambda = new AddUserSkillLambda(userSkillDao, userDao);
+        deleteUserSkillLambda = new DeleteUserSkillLambda(userSkillDao);
+        getAllUserSkillLambda = new GetAllUserSkillLambda(userSkillDao);
+        updateUserSkillLambda = new UpdateUserSkillLambda(userSkillDao);
     }
 
     /*
@@ -118,6 +140,14 @@ public class MainLambda implements RequestHandler<Request, Object> {
                 return updateUserExperienceLambda.updateExperience(UpdateExperienceRequest.fromMap(request.getRequestBody()), context);
             case DELETE_USER_EXPERIENCE:
                 return deleteUserExperienceLambda.deleteExperience(DeleteExperienceRequest.fromMap(request.getRequestBody()), context);
+            case ADD_USER_SKILL:
+                return addUserSkillLambda.addSkill(AddSkillRequest.fromMap(request.getRequestBody()), context);
+            case DELETE_USER_SKILL:
+                return deleteUserSkillLambda.deleteSkill(DeleteSkillRequest.fromMap(request.getRequestBody()), context);
+            case UPDATE_USER_SKILL:
+                return updateUserSkillLambda.updateSkill(UpdateSkillRequest.fromMap(request.getRequestBody()), context);
+            case GET_ALL_USER_SKILL:
+                return getAllUserSkillLambda.getAllUserSkill(GetAllUserSkillRequest.fromMap(request.getRequestBody()), context);
             case CREATE_SECTION_REQUEST:
                 return createSectionLambda.createSection(CreateSectionRequest.fromMap(request.getRequestBody()));
         }

@@ -21,19 +21,19 @@ public class DeleteUserExperienceLambda {
     /*
     Deletes an experience entity for the specified user in the request
      */
-    public ResponseMessage deleteExperience(DeleteExperienceRequest request, Context contecxt) {
+    public ResponseMessage deleteExperience(DeleteExperienceRequest request, Context context) {
         int experienceId = request.getExperienceId();
 
         final Optional<DynamoDBUserExperience> userExperienceOptional = userExperienceDao
                 .getExperienceEntityForUser(request.getEmail(), experienceId);
 
         if (!userExperienceOptional.isPresent()) {
-            return new ResponseMessage(ERROR, String.format("Experience entity with id: %n for user with email %s",
+            return new ResponseMessage(ERROR, String.format("Experience entity with id: %d for user with email %s",
                     experienceId, request.getEmail()));
         }
 
         userExperienceDao.deleteEducationEntityForUser(userExperienceOptional.get());
 
-        return new ResponseMessage(SUCCESS, String.format("Experience entity for user %s with id: %n has been deleted", request.getEmail(), experienceId));
+        return new ResponseMessage(SUCCESS, String.format("Experience entity for user %s with id: %d has been deleted", request.getEmail(), experienceId));
     }
 }
