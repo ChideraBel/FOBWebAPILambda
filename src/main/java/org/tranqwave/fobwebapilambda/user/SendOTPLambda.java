@@ -51,7 +51,7 @@ public class SendOTPLambda {
 
         final String randomizedCode = String.valueOf(ThreadLocalRandom.current().nextInt(1000, 9999));
 
-        final boolean response = sendCode(request.getEmail(), randomizedCode);
+        final boolean response = sendCode(request.getEmail(), randomizedCode, context);
 
         if (!response) {
             return new ResponseMessage(ERROR, "Your OTP code could not be sent!");
@@ -66,7 +66,7 @@ public class SendOTPLambda {
         return new ResponseMessage(SUCCESS, "Your OTP code has been sent!");
     }
 
-    private boolean sendCode(@NonNull final String userEmail, @NonNull final String code) {
+    private boolean sendCode(@NonNull final String userEmail, @NonNull final String code, Context context) {
         Email from = new Email(COMPANY_EMAIL);
         String subject = "Your FOB Registration OTP code";
         Email to = new Email(userEmail);
@@ -80,6 +80,7 @@ public class SendOTPLambda {
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
             Response response = sg.api(request);
+            context.getLogger().log(response.getBody());
             if(response.getBody().contains("error"))
                 return false;
         } catch (IOException ex) {
