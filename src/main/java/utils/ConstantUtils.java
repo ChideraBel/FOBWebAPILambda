@@ -26,5 +26,6 @@ public class ConstantUtils {
         final public static String UPDATE_USER_PROJECT = "updateUserProject";
         final public static String GET_ALL_USER_PROJECT = "getAllUserProject";
         final public static String CREATE_SECTION_REQUEST = "createSection";
+        final public static String GET_USER_PROFILE = "getUserProfile";
     }
 }

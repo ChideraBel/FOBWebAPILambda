@@ -23,6 +23,7 @@ import model.DeleteSkillRequest;
 import model.DeleteUserRequest;
 import model.GetAllUserEducationRequest;
 import model.GetAllUserExperienceRequest;
+import model.GetAllUserProfileDetailsRequest;
 import model.GetAllUserSkillRequest;
 import model.LoginUserRequest;
 import model.Request;
@@ -44,6 +45,7 @@ import org.tranqwave.fobwebapilambda.section.CreateSectionLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserExperienceLambda;
 import org.tranqwave.fobwebapilambda.user.CreateUserLambda;
 import org.tranqwave.fobwebapilambda.user.DeleteUserLambda;
+import org.tranqwave.fobwebapilambda.user.GetUserProfileLambda;
 import org.tranqwave.fobwebapilambda.user.LoginUserLambda;
 
 import static utils.ConstantUtils.RequestTypes.ADD_USER_EDUCATION;
@@ -58,6 +60,7 @@ import static utils.ConstantUtils.RequestTypes.DELETE_USER_SKILL;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EXPERIENCE;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_SKILL;
+import static utils.ConstantUtils.RequestTypes.GET_USER_PROFILE;
 import static utils.ConstantUtils.RequestTypes.LOGIN_USER_REQUEST;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EXPERIENCE;
@@ -81,6 +84,7 @@ public class MainLambda implements RequestHandler<Request, Object> {
     private final DeleteUserSkillLambda deleteUserSkillLambda;
     private final GetAllUserSkillLambda getAllUserSkillLambda;
     private final UpdateUserSkillLambda updateUserSkillLambda;
+    private final GetUserProfileLambda getUserProfileLambda;
 
     public MainLambda() {
         final AmazonDynamoDB dynamoDBClient = AmazonDynamoDBClientBuilder.defaultClient();
@@ -109,6 +113,7 @@ public class MainLambda implements RequestHandler<Request, Object> {
         deleteUserSkillLambda = new DeleteUserSkillLambda(userSkillDao);
         getAllUserSkillLambda = new GetAllUserSkillLambda(userSkillDao);
         updateUserSkillLambda = new UpdateUserSkillLambda(userSkillDao);
+        getUserProfileLambda = new GetUserProfileLambda(userProfileDao);
     }
 
     /*
@@ -150,6 +155,8 @@ public class MainLambda implements RequestHandler<Request, Object> {
                 return getAllUserSkillLambda.getAllUserSkill(GetAllUserSkillRequest.fromMap(request.getRequestBody()), context);
             case CREATE_SECTION_REQUEST:
                 return createSectionLambda.createSection(CreateSectionRequest.fromMap(request.getRequestBody()));
+            case GET_USER_PROFILE:
+                return getUserProfileLambda.getAllUserProfileDetails(GetAllUserProfileDetailsRequest.fromMap(request.getRequestBody()), context);
         }
         throw new IllegalArgumentException(String.format("Bad request input request type: %s", request.getRequestType()));
     }
