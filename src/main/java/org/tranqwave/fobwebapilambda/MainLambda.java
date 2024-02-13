@@ -25,6 +25,7 @@ import model.DeleteUserRequest;
 import model.GetAllUserEducationRequest;
 import model.GetAllUserExperienceRequest;
 import model.GetAllUserSkillRequest;
+import model.GetSectionRequest;
 import model.LoginUserRequest;
 import model.OTPVerificationRequest;
 import model.Request;
@@ -45,6 +46,8 @@ import org.tranqwave.fobwebapilambda.resume.UpdateUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserSkillLambda;
 import org.tranqwave.fobwebapilambda.section.CreateSectionLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserExperienceLambda;
+import org.tranqwave.fobwebapilambda.section.GetAllSectionsLambda;
+import org.tranqwave.fobwebapilambda.section.GetSectionLambda;
 import org.tranqwave.fobwebapilambda.user.CreateUserLambda;
 import org.tranqwave.fobwebapilambda.user.DeleteUserLambda;
 import org.tranqwave.fobwebapilambda.user.LoginUserLambda;
@@ -60,9 +63,11 @@ import static utils.ConstantUtils.RequestTypes.DELETE_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_EXPERIENCE;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_REQUEST;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_SKILL;
+import static utils.ConstantUtils.RequestTypes.GET_ALL_SECTIONS_REQUEST;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EXPERIENCE;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_SKILL;
+import static utils.ConstantUtils.RequestTypes.GET_SECTION_REQUEST;
 import static utils.ConstantUtils.RequestTypes.LOGIN_USER_REQUEST;
 import static utils.ConstantUtils.RequestTypes.SEND_OTP_REQUEST;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EDUCATION;
@@ -84,6 +89,10 @@ public class MainLambda implements RequestHandler<Request, Object> {
     private final DeleteUserExperienceLambda deleteUserExperienceLambda;
     private final GetAllUserExperienceLambda getAllUserExperienceLambda;
     private final CreateSectionLambda createSectionLambda;
+
+    private final GetSectionLambda getSectionLambda;
+
+    private final GetAllSectionsLambda getAllSectionsLambda;
     private final AddUserSkillLambda addUserSkillLambda;
     private final DeleteUserSkillLambda deleteUserSkillLambda;
     private final GetAllUserSkillLambda getAllUserSkillLambda;
@@ -119,6 +128,8 @@ public class MainLambda implements RequestHandler<Request, Object> {
         deleteUserSkillLambda = new DeleteUserSkillLambda(userSkillDao);
         getAllUserSkillLambda = new GetAllUserSkillLambda(userSkillDao);
         updateUserSkillLambda = new UpdateUserSkillLambda(userSkillDao);
+        getSectionLambda = new GetSectionLambda(sectionDao);
+        getAllSectionsLambda = new GetAllSectionsLambda(sectionDao);
         otpVerificationLambda = new OTPVerificationLambda(otpCodesDao);
         sendOTPLambda = new SendOTPLambda(otpCodesDao, userDao);
     }
@@ -162,6 +173,10 @@ public class MainLambda implements RequestHandler<Request, Object> {
                 return getAllUserSkillLambda.getAllUserSkill(GetAllUserSkillRequest.fromMap(request.getRequestBody()), context);
             case CREATE_SECTION_REQUEST:
                 return createSectionLambda.createSection(CreateSectionRequest.fromMap(request.getRequestBody()));
+            case GET_SECTION_REQUEST:
+                return getSectionLambda.getSection(GetSectionRequest.fromMap(request.getRequestBody()));
+            case GET_ALL_SECTIONS_REQUEST:
+                return getAllSectionsLambda.getAllSections();
             case SEND_OTP_REQUEST:
                 return sendOTPLambda.sendOTPCode(SendOTPRequest.fromMap(request.getRequestBody()), context);
             case VERIFY_OTP_REQUEST:

@@ -22,12 +22,12 @@ public class SectionDao {
 
     public void delete(DynamoDBSection dynamoDBSection) { mapper.delete(dynamoDBSection);}
 
-    public List<DynamoDBSection> getAllSectionsForUser() {
+    public List<DynamoDBSection> getAllSections() {
         return mapper.scan(DynamoDBSection.class, new DynamoDBScanExpression());
     }
 
     public int getNextSequence() {
 
-        return getAllSectionsForUser().size() + 1;
+        return getAllSections().size() + 1;
     }
 }
