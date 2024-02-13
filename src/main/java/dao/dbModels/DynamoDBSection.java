@@ -12,14 +12,14 @@ import lombok.*;
 public class DynamoDBSection {
 
     @DynamoDBHashKey(attributeName = "section_id")
-    public int section_id;
+    private int section_id;
 
     @DynamoDBAttribute(attributeName = "section_name")
-    public String section_name;
+    private String section_name;
 
     @DynamoDBAttribute(attributeName = "section_content")
-    public String section_content;
+    private String section_content;
 
     @DynamoDBAttribute(attributeName = "section_description")
-    public String section_description;
+    private String section_description;
 }

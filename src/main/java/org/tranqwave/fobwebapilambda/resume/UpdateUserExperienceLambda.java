@@ -28,7 +28,7 @@ public class UpdateUserExperienceLambda {
         final Optional<DynamoDBUserExperience> userExperienceOptional = userExperienceDao.getExperienceEntityForUser(request.getEmail(), experienceId);
 
         if (!userExperienceOptional.isPresent()) {
-            return new ResponseMessage(ERROR, String.format("Experience entity for user with email %s and experience id %n does not exist",
+            return new ResponseMessage(ERROR, String.format("Experience entity for user with email %s and experience id %d does not exist",
                     request.getEmail(), experienceId));
         }
 
@@ -41,6 +41,6 @@ public class UpdateUserExperienceLambda {
 
         userExperienceDao.save(dynamoDBUserExperience);
 
-        return new ResponseMessage(SUCCESS, String.format("Experience entity for user %s with id: %n has been updated", request.getEmail(), experienceId));
+        return new ResponseMessage(SUCCESS, String.format("Experience entity for user %s with id: %d has been updated", request.getEmail(), experienceId));
     }
 }

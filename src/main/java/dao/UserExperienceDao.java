@@ -25,11 +25,11 @@ public class UserExperienceDao {
     Gets all the user experience for the specified userId
      */
     public List<DynamoDBUserExperience> getAllUserExperience(@NonNull final String userId) {
-        DynamoDBUserExperience experience = new DynamoDBUserExperience();
-        experience.setUser_id(userId);
+        DynamoDBUserExperience partitionKeyItem = new DynamoDBUserExperience();
+        partitionKeyItem.setUser_id(userId);
 
         DynamoDBQueryExpression<DynamoDBUserExperience> queryExpression = new DynamoDBQueryExpression<DynamoDBUserExperience>()
-                .withHashKeyValues(experience);
+                .withHashKeyValues(partitionKeyItem);
 
         return mapper.query(DynamoDBUserExperience.class, queryExpression);
     }

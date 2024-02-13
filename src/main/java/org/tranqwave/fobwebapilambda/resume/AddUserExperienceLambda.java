@@ -23,7 +23,6 @@ public class AddUserExperienceLambda {
     /*
     Adds a new user experience entity for the specified user in the request
      */
-
     public ResponseMessage addExperience(AddExperienceRequest request, Context context) {
         final DynamoDBUser user = userDao.getUser(request.getEmail());
 
