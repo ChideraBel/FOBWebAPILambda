@@ -1,6 +1,7 @@
 package utils;
 
-import org.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
@@ -29,8 +30,10 @@ public class CredentialsUtils {
             throw e;
         }
 
-        final JSONObject jsonObject = new JSONObject(getSecretValueResponse.secretString());
-        final String apiKey = jsonObject.getString(secretName);
+        Gson gson = new Gson();
+
+        final JsonObject jsonObject = gson.fromJson(getSecretValueResponse.secretString(), JsonObject.class);
+        final String apiKey = jsonObject.get(secretName).getAsString();
 
         return apiKey;
     }

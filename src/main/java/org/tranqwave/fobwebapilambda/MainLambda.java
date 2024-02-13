@@ -89,9 +89,7 @@ public class MainLambda implements RequestHandler<Request, Object> {
     private final DeleteUserExperienceLambda deleteUserExperienceLambda;
     private final GetAllUserExperienceLambda getAllUserExperienceLambda;
     private final CreateSectionLambda createSectionLambda;
-
     private final GetSectionLambda getSectionLambda;
-
     private final GetAllSectionsLambda getAllSectionsLambda;
     private final AddUserSkillLambda addUserSkillLambda;
     private final DeleteUserSkillLambda deleteUserSkillLambda;
@@ -172,11 +170,11 @@ public class MainLambda implements RequestHandler<Request, Object> {
             case GET_ALL_USER_SKILL:
                 return getAllUserSkillLambda.getAllUserSkill(GetAllUserSkillRequest.fromMap(request.getRequestBody()), context);
             case CREATE_SECTION_REQUEST:
-                return createSectionLambda.createSection(CreateSectionRequest.fromMap(request.getRequestBody()));
+                return createSectionLambda.createSection(CreateSectionRequest.fromMap(request.getRequestBody()), context);
             case GET_SECTION_REQUEST:
-                return getSectionLambda.getSection(GetSectionRequest.fromMap(request.getRequestBody()));
+                return getSectionLambda.getSection(GetSectionRequest.fromMap(request.getRequestBody()), context);
             case GET_ALL_SECTIONS_REQUEST:
-                return getAllSectionsLambda.getAllSections();
+                return getAllSectionsLambda.getAllSections(context);
             case SEND_OTP_REQUEST:
                 return sendOTPLambda.sendOTPCode(SendOTPRequest.fromMap(request.getRequestBody()), context);
             case VERIFY_OTP_REQUEST:

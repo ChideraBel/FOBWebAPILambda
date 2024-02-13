@@ -39,6 +39,9 @@ public class AddUserSkillLambda {
 
         userSkillDao.save(userSkill);
 
+        //Log action
+        context.getLogger().log(String.format("New skill added for user: %s in FOBUserSKillsTable", request.getEmail()));
+
         return new ResponseMessage(SUCCESS, String.format("Skill entered for user %s", request.getEmail()));
     }
 }

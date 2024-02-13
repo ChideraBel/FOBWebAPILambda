@@ -23,6 +23,9 @@ public class OTPVerificationLambda {
 
         final DynamoDBOTPCode dynamoDBOTPCode = otpCodesDao.getLatestOTPCode(request.getEmail());
 
+        //Log action
+        context.getLogger().log(String.format("Checking for OTP code for user %s", request.getEmail()));
+
         if(dynamoDBOTPCode == null)
             return new ResponseMessage(ERROR, String.format("Cannot find OTP Code for user %s", request.getEmail()));
 

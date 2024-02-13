@@ -36,6 +36,9 @@ public class UpdateUserSkillLambda {
 
         userSkillDao.save(dynamoDBUserSkill);
 
+        //Log action
+        context.getLogger().log(String.format("Skill with id: %d for user: %s was updated in FOBUserSKillsTable", skillId, request.getEmail()));
+
         return new ResponseMessage(SUCCESS, String.format("Skill entity for user %s with id: %d has been updated", request.getEmail(), skillId));
     }
 }
