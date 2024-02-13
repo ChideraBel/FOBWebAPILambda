@@ -8,6 +8,8 @@ import model.GetSectionResponse;
 import model.Request;
 import model.Section;
 
+import static utils.ConstantUtils.toSection;
+
 public class GetSectionLambda {
     private final SectionDao sectionDao;
 
@@ -22,14 +24,5 @@ public class GetSectionLambda {
         context.getLogger().log(String.format("Retrieved section with id: %d from FOBSectionTable", section.getSection_id()));
 
         return new GetSectionResponse(section);
-    }
-
-    public Section toSection(DynamoDBSection dynamoDBSection) {
-        return Section.builder()
-                .section_id(dynamoDBSection.getSection_id())
-                .name(dynamoDBSection.getSection_name())
-                .content(dynamoDBSection.getSection_content())
-                .description(dynamoDBSection.getSection_description())
-                .build();
     }
 }

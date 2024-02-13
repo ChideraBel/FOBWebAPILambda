@@ -5,9 +5,12 @@ import dao.SectionDao;
 import dao.dbModels.DynamoDBSection;
 import model.GetAllSectionsResponse;
 import model.Section;
+import utils.ConstantUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static utils.ConstantUtils.toSection;
 
 public class GetAllSectionsLambda {
     private final SectionDao sectionDao;
@@ -26,14 +29,5 @@ public class GetAllSectionsLambda {
         context.getLogger().log(String.format("Retrieved all %d sections from FOBSectionTable", sectionList.size()));
 
         return new GetAllSectionsResponse(sectionList);
-    }
-
-    private Section toSection(DynamoDBSection dynamoDBSection) {
-        return Section.builder()
-                .section_id(dynamoDBSection.getSection_id())
-                .name(dynamoDBSection.getSection_name())
-                .content(dynamoDBSection.getSection_content())
-                .description(dynamoDBSection.getSection_description())
-                .build();
     }
 }

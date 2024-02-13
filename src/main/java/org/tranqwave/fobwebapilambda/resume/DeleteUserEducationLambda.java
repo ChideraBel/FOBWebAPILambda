@@ -33,6 +33,8 @@ public class DeleteUserEducationLambda {
 
         userEducationDao.deleteEducationEntityForUser(userEducationOptional.get());
 
+        context.getLogger().log(String.format("Education with id %d for user %s deleted from FOBUserEducationTable"));
+
         return new ResponseMessage(SUCCESS, String.format("Education entity for user %s with id: %d has been deleted", request.getEmail(), educationId));
     }
 }
