@@ -21,7 +21,7 @@ public class OTPVerificationRequest {
     public static OTPVerificationRequest fromMap(Map<String, String> map) {
         return OTPVerificationRequest.builder()
                 .email(map.get("email"))
-                .enteredOTP(map.get("enteredOPT"))
+                .enteredOTP(map.get("enteredOTP"))
                 .build();
     }
 }
