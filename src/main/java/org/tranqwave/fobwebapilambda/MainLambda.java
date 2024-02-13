@@ -25,6 +25,7 @@ import org.tranqwave.fobwebapilambda.resume.GetAllUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserEducationLambda;
 import org.tranqwave.fobwebapilambda.section.CreateSectionLambda;
 import org.tranqwave.fobwebapilambda.section.GetAllSectionsLambda;
+import org.tranqwave.fobwebapilambda.section.GetSectionLambda;
 import org.tranqwave.fobwebapilambda.user.CreateUserLambda;
 import org.tranqwave.fobwebapilambda.user.DeleteUserLambda;
 import org.tranqwave.fobwebapilambda.user.LoginUserLambda;
@@ -34,8 +35,9 @@ import static utils.ConstantUtils.RequestTypes.CREATE_SECTION_REQUEST;
 import static utils.ConstantUtils.RequestTypes.CREATE_USER_REQUEST;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_REQUEST;
-import static utils.ConstantUtils.RequestTypes.GET_ALL_SECTIONS;
+import static utils.ConstantUtils.RequestTypes.GET_ALL_SECTIONS_REQUEST;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EDUCATION;
+import static utils.ConstantUtils.RequestTypes.GET_SECTION_REQUEST;
 import static utils.ConstantUtils.RequestTypes.LOGIN_USER_REQUEST;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EDUCATION;
 
@@ -57,6 +59,7 @@ public class MainLambda implements RequestHandler<Request, Object> {
 
     private final CreateSectionLambda createSectionLambda;
 
+    private final GetSectionLambda getSectionLambda;
     private final GetAllSectionsLambda getAllSectionsLambda;
 
     public MainLambda() {
@@ -75,6 +78,7 @@ public class MainLambda implements RequestHandler<Request, Object> {
         deleteUserEducationLambda = new DeleteUserEducationLambda(userEducationDao);
         getAllUserEducationLambda = new GetAllUserEducationLambda(userEducationDao);
         createSectionLambda = new CreateSectionLambda(sectionDao);
+        getSectionLambda = new GetSectionLambda(sectionDao);
         getAllSectionsLambda = new GetAllSectionsLambda(sectionDao);
     }
 
@@ -101,7 +105,9 @@ public class MainLambda implements RequestHandler<Request, Object> {
                 return getAllUserEducationLambda.getAllUserEducation(GetAllUserEducationRequest.fromMap(request.getRequestBody()), context);
             case CREATE_SECTION_REQUEST:
                 return createSectionLambda.createSection(CreateSectionRequest.fromMap(request.getRequestBody()));
-            case GET_ALL_SECTIONS:
+            case GET_SECTION_REQUEST:
+                return getSectionLambda.getSectionResponse(request);
+            case GET_ALL_SECTIONS_REQUEST:
                 return getAllSectionsLambda.getAllSections();
         }
         throw new IllegalArgumentException(String.format("Bad request input request type: %s", request.getRequestType()));

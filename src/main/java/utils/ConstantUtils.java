@@ -15,8 +15,8 @@ public class ConstantUtils {
         final public static String UPDATE_USER_EDUCATION = "updateUserEducation";
         final public static String GET_ALL_USER_EDUCATION = "getAllUserEducation";
         final public static String CREATE_SECTION_REQUEST = "createSection";
-
-        final public static String GET_ALL_SECTIONS = "getAllSections";
+        final public static String GET_SECTION_REQUEST = "getSection";
+        final public static String GET_ALL_SECTIONS_REQUEST = "getAllSections";
     }
 
 }
