@@ -15,12 +15,15 @@ public class CreateSectionLambda {
         this.sectionDao = sectionDao;
     }
 
-    public ResponseMessage createSection(CreateSectionRequest request) {
+    public ResponseMessage createSection(CreateSectionRequest request, Context context) {
 
         int sectionId = sectionDao.getNextSequence();
 
         final DynamoDBSection section = new DynamoDBSection(sectionId, request.getName(), request.getContent(), request.getDescription() );
         sectionDao.save(section);
+
+        //Log action
+        context.getLogger().log(String.format("Saved new section with id: %d to FOBSectionTable", sectionId));
 
         return new ResponseMessage(SUCCESS, "Section successfully created");
     }

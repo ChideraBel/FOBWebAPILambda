@@ -29,6 +29,9 @@ public class GetAllUserExperienceLambda {
 
         final List<Experience> experienceList = dynamoDBUserExperienceList.stream().map(x -> toExperience(x)).collect(Collectors.toList());
 
+        //Log action
+        context.getLogger().log(String.format("Retrieved all experience for user %s from FOBUserExperienceTable", request.getEmail()));
+
         return new GetAllUserExperienceResponse(experienceList);
     }
 

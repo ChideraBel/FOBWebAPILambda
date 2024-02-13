@@ -28,6 +28,9 @@ public class GetAllUserSkillLambda {
 
         final List<String> skillList = dynamoDBUserSkillList.stream().map(x -> x.getSkill_name()).collect(Collectors.toList());
 
+        //Log action
+        context.getLogger().log(String.format("All skills for user: %s was retrieved from FOBUserSKillsTable", request.getEmail()));
+
         return new GetAllUserSkillResponse(skillList);
     }
 }

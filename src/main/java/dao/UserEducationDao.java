@@ -34,6 +34,9 @@ public class UserEducationDao {
         return getAllUserEducation(userId).size() + 1;
     }
 
+    /*
+    Gets a single education entity with the given educationId and userId
+     */
     public Optional<DynamoDBUserEducation> getEducationEntityForUser(@NonNull final String userId,
                                                                      @NonNull final int educationId) {
         return Optional.ofNullable(mapper.load(DynamoDBUserEducation.class, userId, educationId));
@@ -46,5 +49,4 @@ public class UserEducationDao {
     public void deleteEducationEntityForUser(@NonNull final DynamoDBUserEducation dynamoDBUserEducation) {
         mapper.delete(dynamoDBUserEducation);
     }
-
 }

@@ -12,18 +12,22 @@ import dao.UserEducationDao;
 import dao.UserExperienceDao;
 import dao.UserProfileDao;
 
+import dao.UserProjectDao;
 import dao.UserSkillDao;
 import model.AddEducationRequest;
+import model.AddProjectRequest;
 import model.AddSkillRequest;
 import model.CreateSectionRequest;
 import model.AddExperienceRequest;
 import model.CreateUserRequest;
 import model.DeleteEducationRequest;
 import model.DeleteExperienceRequest;
+import model.DeleteProjectRequest;
 import model.DeleteSkillRequest;
 import model.DeleteUserRequest;
 import model.GetAllUserEducationRequest;
 import model.GetAllUserExperienceRequest;
+import model.GetAllUserProjectRequest;
 import model.GetAllUserSkillRequest;
 import model.GetSectionRequest;
 import model.LoginUserRequest;
@@ -32,17 +36,22 @@ import model.Request;
 import model.SendOTPRequest;
 import model.UpdateEducationRequest;
 import model.UpdateExperienceRequest;
+import model.UpdateProjectRequest;
 import model.UpdateSkillRequest;
 import org.tranqwave.fobwebapilambda.resume.AddUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.AddUserExperienceLambda;
+import org.tranqwave.fobwebapilambda.resume.AddUserProjectLambda;
 import org.tranqwave.fobwebapilambda.resume.AddUserSkillLambda;
 import org.tranqwave.fobwebapilambda.resume.DeleteUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.DeleteUserExperienceLambda;
+import org.tranqwave.fobwebapilambda.resume.DeleteUserProjectLambda;
 import org.tranqwave.fobwebapilambda.resume.DeleteUserSkillLambda;
 import org.tranqwave.fobwebapilambda.resume.GetAllUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.GetAllUserExperienceLambda;
+import org.tranqwave.fobwebapilambda.resume.GetAllUserProjectLambda;
 import org.tranqwave.fobwebapilambda.resume.GetAllUserSkillLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserEducationLambda;
+import org.tranqwave.fobwebapilambda.resume.UpdateUserProjectLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserSkillLambda;
 import org.tranqwave.fobwebapilambda.section.CreateSectionLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserExperienceLambda;
@@ -55,23 +64,27 @@ import org.tranqwave.fobwebapilambda.user.OTPVerificationLambda;
 import org.tranqwave.fobwebapilambda.user.SendOTPLambda;
 
 import static utils.ConstantUtils.RequestTypes.ADD_USER_EDUCATION;
+import static utils.ConstantUtils.RequestTypes.ADD_USER_PROJECT;
 import static utils.ConstantUtils.RequestTypes.ADD_USER_SKILL;
 import static utils.ConstantUtils.RequestTypes.CREATE_SECTION_REQUEST;
 import static utils.ConstantUtils.RequestTypes.ADD_USER_EXPERIENCE;
 import static utils.ConstantUtils.RequestTypes.CREATE_USER_REQUEST;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_EXPERIENCE;
+import static utils.ConstantUtils.RequestTypes.DELETE_USER_PROJECT;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_REQUEST;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_SKILL;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_SECTIONS_REQUEST;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EXPERIENCE;
+import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_PROJECT;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_SKILL;
 import static utils.ConstantUtils.RequestTypes.GET_SECTION_REQUEST;
 import static utils.ConstantUtils.RequestTypes.LOGIN_USER_REQUEST;
 import static utils.ConstantUtils.RequestTypes.SEND_OTP_REQUEST;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EXPERIENCE;
+import static utils.ConstantUtils.RequestTypes.UPDATE_USER_PROJECT;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_SKILL;
 import static utils.ConstantUtils.RequestTypes.VERIFY_OTP_REQUEST;
 
@@ -89,9 +102,7 @@ public class MainLambda implements RequestHandler<Request, Object> {
     private final DeleteUserExperienceLambda deleteUserExperienceLambda;
     private final GetAllUserExperienceLambda getAllUserExperienceLambda;
     private final CreateSectionLambda createSectionLambda;
-
     private final GetSectionLambda getSectionLambda;
-
     private final GetAllSectionsLambda getAllSectionsLambda;
     private final AddUserSkillLambda addUserSkillLambda;
     private final DeleteUserSkillLambda deleteUserSkillLambda;
@@ -99,6 +110,10 @@ public class MainLambda implements RequestHandler<Request, Object> {
     private final UpdateUserSkillLambda updateUserSkillLambda;
     private final OTPVerificationLambda otpVerificationLambda;
     private final SendOTPLambda sendOTPLambda;
+    private final AddUserProjectLambda addUserProjectLambda;
+    private final DeleteUserProjectLambda deleteUserProjectLambda;
+    private final UpdateUserProjectLambda updateUserProjectLambda;
+    private final GetAllUserProjectLambda getAllUserProjectLambda;
 
     public MainLambda() {
         final AmazonDynamoDB dynamoDBClient = AmazonDynamoDBClientBuilder.defaultClient();
@@ -111,6 +126,7 @@ public class MainLambda implements RequestHandler<Request, Object> {
         final UserExperienceDao userExperienceDao = new UserExperienceDao(mapper);
         final UserSkillDao userSkillDao = new UserSkillDao(mapper);
         final OTPCodesDao otpCodesDao = new OTPCodesDao(mapper);
+        final UserProjectDao userProjectDao = new UserProjectDao(mapper);
 
         loginUserLambda = new LoginUserLambda(userDao);
         deleteUserLambda = new DeleteUserLambda(userDao, userProfileDao);
@@ -132,6 +148,10 @@ public class MainLambda implements RequestHandler<Request, Object> {
         getAllSectionsLambda = new GetAllSectionsLambda(sectionDao);
         otpVerificationLambda = new OTPVerificationLambda(otpCodesDao);
         sendOTPLambda = new SendOTPLambda(otpCodesDao, userDao);
+        addUserProjectLambda = new AddUserProjectLambda(userProjectDao, userDao);
+        deleteUserProjectLambda = new DeleteUserProjectLambda(userProjectDao);
+        updateUserProjectLambda = new UpdateUserProjectLambda(userProjectDao);
+        getAllUserProjectLambda = new GetAllUserProjectLambda(userProjectDao);
     }
 
     /*
@@ -172,15 +192,23 @@ public class MainLambda implements RequestHandler<Request, Object> {
             case GET_ALL_USER_SKILL:
                 return getAllUserSkillLambda.getAllUserSkill(GetAllUserSkillRequest.fromMap(request.getRequestBody()), context);
             case CREATE_SECTION_REQUEST:
-                return createSectionLambda.createSection(CreateSectionRequest.fromMap(request.getRequestBody()));
+                return createSectionLambda.createSection(CreateSectionRequest.fromMap(request.getRequestBody()), context);
             case GET_SECTION_REQUEST:
-                return getSectionLambda.getSection(GetSectionRequest.fromMap(request.getRequestBody()));
+                return getSectionLambda.getSection(GetSectionRequest.fromMap(request.getRequestBody()), context);
             case GET_ALL_SECTIONS_REQUEST:
-                return getAllSectionsLambda.getAllSections();
+                return getAllSectionsLambda.getAllSections(context);
             case SEND_OTP_REQUEST:
                 return sendOTPLambda.sendOTPCode(SendOTPRequest.fromMap(request.getRequestBody()), context);
             case VERIFY_OTP_REQUEST:
                 return otpVerificationLambda.verifyOTPCode(OTPVerificationRequest.fromMap(request.getRequestBody()), context);
+            case ADD_USER_PROJECT:
+                return addUserProjectLambda.addProject(AddProjectRequest.fromMap(request.getRequestBody()), context);
+            case DELETE_USER_PROJECT:
+                return deleteUserProjectLambda.deleteProject(DeleteProjectRequest.fromMap(request.getRequestBody()), context);
+            case UPDATE_USER_PROJECT:
+                return updateUserProjectLambda.updateProject(UpdateProjectRequest.fromMap(request.getRequestBody()), context);
+            case GET_ALL_USER_PROJECT:
+                return getAllUserProjectLambda.getAllProjects(GetAllUserProjectRequest.fromMap(request.getRequestBody()), context);
         }
         throw new IllegalArgumentException(String.format("Bad request input request type: %s", request.getRequestType()));
     }

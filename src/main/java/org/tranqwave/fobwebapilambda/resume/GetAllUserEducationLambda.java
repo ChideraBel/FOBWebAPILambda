@@ -19,7 +19,7 @@ public class GetAllUserEducationLambda {
     }
 
     /*
-    Gets all education entity for the specified user in the request
+    Gets all education entities for the specified user in the request
      */
     public GetAllUserEducationResponse getAllUserEducation(@NonNull final GetAllUserEducationRequest request, Context context) {
         final List<DynamoDBUserEducation> dynamoDBUserEducations = userEducationDao.getAllUserEducation(request.getEmail());
@@ -28,6 +28,9 @@ public class GetAllUserEducationLambda {
             throw new IllegalArgumentException(String.format("Cannot find education details for user: %s", request.getEmail()));
 
         final List<Education> educationList = dynamoDBUserEducations.stream().map(x -> toEducation(x)).collect(Collectors.toList());
+
+        //Log action
+        context.getLogger().log(String.format("Retrieved all %d education for user %s from FOBUserEducationTable", educationList.size()));
 
         return new GetAllUserEducationResponse(educationList);
     }

@@ -53,15 +53,20 @@ public class SendOTPLambda {
 
         final boolean response = sendCode(request.getEmail(), randomizedCode, context);
 
+        context.getLogger().log(String.format("OTP code sending to email: %s attempted", request.getEmail()));
+
         if (!response) {
             return new ResponseMessage(ERROR, "Your OTP code could not be sent!");
         }
+
         final DynamoDBOTPCode dynamoDBOTPCode = DynamoDBOTPCode.builder()
                 .user_id(request.getEmail())
                 .otp_code(randomizedCode)
                 .timestamp(currentDate)
                 .build();
         otpCodesDao.save(dynamoDBOTPCode);
+
+        context.getLogger().log(String.format("New OTP code saved for user %s to FOBOTPCodesTable", request.getEmail()));
 
         return new ResponseMessage(SUCCESS, "Your OTP code has been sent!");
     }
@@ -84,6 +89,7 @@ public class SendOTPLambda {
             if(response.getBody().contains("error"))
                 return false;
         } catch (IOException ex) {
+            context.getLogger().log(String.format("Send Grid IO Exception error: %s",ex.getMessage()));
             return false;
         }
         return true;

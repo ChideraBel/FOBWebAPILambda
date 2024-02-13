@@ -21,7 +21,6 @@ public class UpdateUserEducationLambda {
     /*
     Update an education entity for the specified user in the request
      */
-
     public ResponseMessage updateEducation(UpdateEducationRequest request, Context context) {
         final int educationId = request.getEducationId();
 
@@ -41,6 +40,8 @@ public class UpdateUserEducationLambda {
         dynamoDBUserEducation.setInstitution_name(request.getInstitution());
 
         userEducationDao.save(dynamoDBUserEducation);
+
+        context.getLogger().log(String.format("Education with id: %d for user %s has been updated in FOBUserEducationTable"));
 
         return new ResponseMessage(SUCCESS, String.format("Education entity for user %s with id: %d has been updated", request.getEmail(), educationId));
     }

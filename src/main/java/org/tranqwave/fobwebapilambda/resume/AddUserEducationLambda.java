@@ -44,6 +44,8 @@ public class AddUserEducationLambda {
 
         userEducationDao.save(userEducation);
 
+        context.getLogger().log(String.format("New education added for user %s to FOBUserEducationTable"));
+
         return new ResponseMessage(SUCCESS, String.format("Education entered for user %s", request.getEmail()));
     }
 }

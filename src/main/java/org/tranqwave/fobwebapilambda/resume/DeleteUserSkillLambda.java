@@ -34,6 +34,9 @@ public class DeleteUserSkillLambda {
 
         userSkillDao.deleteSkillForUser(userSkillOptional.get());
 
+        //Log action
+        context.getLogger().log(String.format("Deleted skill with id: %d for user: %s from FOBUserSKillsTable", skillId, request.getEmail()));
+
         return new ResponseMessage(SUCCESS, String.format("Skill entity for user %s with id: %d has been deleted", request.getEmail(), skillId));
     }
 }

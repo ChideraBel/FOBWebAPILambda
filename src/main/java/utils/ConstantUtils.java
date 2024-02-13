@@ -1,5 +1,10 @@
 package utils;
 
+import dao.dbModels.DynamoDBSection;
+import dao.dbModels.DynamoDBUserProject;
+import model.Project;
+import model.Section;
+
 public class ConstantUtils {
 
     final public static String ERROR = "ERROR";
@@ -30,5 +35,25 @@ public class ConstantUtils {
         final public static String GET_ALL_SECTIONS_REQUEST =" getAllSections";
         final public static String SEND_OTP_REQUEST = "sendOTP";
         final public static String VERIFY_OTP_REQUEST = "verifyOTP";
+    }
+
+    public static Section toSection(DynamoDBSection dynamoDBSection) {
+        return Section.builder()
+                .section_id(dynamoDBSection.getSection_id())
+                .name(dynamoDBSection.getSection_name())
+                .content(dynamoDBSection.getSection_content())
+                .description(dynamoDBSection.getSection_description())
+                .build();
+    }
+
+    public static Project toProject(DynamoDBUserProject dynamoDBUserProject) {
+        return Project.builder()
+                .projectDescription(dynamoDBUserProject.getDescription())
+                .projectName(dynamoDBUserProject.getProject_title())
+                .role(dynamoDBUserProject.getRole())
+                .startDate(dynamoDBUserProject.getStart_date())
+                .techUsed(dynamoDBUserProject.getTechnologies_used())
+                .endDate(dynamoDBUserProject.getEnd_date())
+                .build();
     }
 }
