@@ -28,6 +28,7 @@ public class ConstantUtils {
         final public static String CREATE_SECTION_REQUEST = "createSection";
         final public static String GET_SECTION_REQUEST = "getSection";
         final public static String GET_ALL_SECTIONS_REQUEST =" getAllSections";
-
+        final public static String SEND_OTP_REQUEST = "sendOTP";
+        final public static String VERIFY_OTP_REQUEST = "verifyOTP";
     }
 }

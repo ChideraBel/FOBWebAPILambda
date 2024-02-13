@@ -5,6 +5,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import dao.OTPCodesDao;
 import dao.SectionDao;
 import dao.UserDao;
 import dao.UserEducationDao;
@@ -26,7 +27,9 @@ import model.GetAllUserExperienceRequest;
 import model.GetAllUserSkillRequest;
 import model.GetSectionRequest;
 import model.LoginUserRequest;
+import model.OTPVerificationRequest;
 import model.Request;
+import model.SendOTPRequest;
 import model.UpdateEducationRequest;
 import model.UpdateExperienceRequest;
 import model.UpdateSkillRequest;
@@ -48,6 +51,8 @@ import org.tranqwave.fobwebapilambda.section.GetSectionLambda;
 import org.tranqwave.fobwebapilambda.user.CreateUserLambda;
 import org.tranqwave.fobwebapilambda.user.DeleteUserLambda;
 import org.tranqwave.fobwebapilambda.user.LoginUserLambda;
+import org.tranqwave.fobwebapilambda.user.OTPVerificationLambda;
+import org.tranqwave.fobwebapilambda.user.SendOTPLambda;
 
 import static utils.ConstantUtils.RequestTypes.ADD_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.ADD_USER_SKILL;
@@ -64,9 +69,11 @@ import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EXPERIENCE;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_SKILL;
 import static utils.ConstantUtils.RequestTypes.GET_SECTION_REQUEST;
 import static utils.ConstantUtils.RequestTypes.LOGIN_USER_REQUEST;
+import static utils.ConstantUtils.RequestTypes.SEND_OTP_REQUEST;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EXPERIENCE;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_SKILL;
+import static utils.ConstantUtils.RequestTypes.VERIFY_OTP_REQUEST;
 
 
 public class MainLambda implements RequestHandler<Request, Object> {
@@ -90,6 +97,8 @@ public class MainLambda implements RequestHandler<Request, Object> {
     private final DeleteUserSkillLambda deleteUserSkillLambda;
     private final GetAllUserSkillLambda getAllUserSkillLambda;
     private final UpdateUserSkillLambda updateUserSkillLambda;
+    private final OTPVerificationLambda otpVerificationLambda;
+    private final SendOTPLambda sendOTPLambda;
 
     public MainLambda() {
         final AmazonDynamoDB dynamoDBClient = AmazonDynamoDBClientBuilder.defaultClient();
@@ -101,6 +110,7 @@ public class MainLambda implements RequestHandler<Request, Object> {
         final SectionDao sectionDao = new SectionDao(mapper);
         final UserExperienceDao userExperienceDao = new UserExperienceDao(mapper);
         final UserSkillDao userSkillDao = new UserSkillDao(mapper);
+        final OTPCodesDao otpCodesDao = new OTPCodesDao(mapper);
 
         loginUserLambda = new LoginUserLambda(userDao);
         deleteUserLambda = new DeleteUserLambda(userDao, userProfileDao);
@@ -120,6 +130,8 @@ public class MainLambda implements RequestHandler<Request, Object> {
         updateUserSkillLambda = new UpdateUserSkillLambda(userSkillDao);
         getSectionLambda = new GetSectionLambda(sectionDao);
         getAllSectionsLambda = new GetAllSectionsLambda(sectionDao);
+        otpVerificationLambda = new OTPVerificationLambda(otpCodesDao);
+        sendOTPLambda = new SendOTPLambda(otpCodesDao, userDao);
     }
 
     /*
@@ -165,6 +177,10 @@ public class MainLambda implements RequestHandler<Request, Object> {
                 return getSectionLambda.getSection(GetSectionRequest.fromMap(request.getRequestBody()));
             case GET_ALL_SECTIONS_REQUEST:
                 return getAllSectionsLambda.getAllSections();
+            case SEND_OTP_REQUEST:
+                return sendOTPLambda.sendOTPCode(SendOTPRequest.fromMap(request.getRequestBody()), context);
+            case VERIFY_OTP_REQUEST:
+                return otpVerificationLambda.verifyOTPCode(OTPVerificationRequest.fromMap(request.getRequestBody()), context);
         }
         throw new IllegalArgumentException(String.format("Bad request input request type: %s", request.getRequestType()));
     }
