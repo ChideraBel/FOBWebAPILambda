@@ -27,5 +27,7 @@ public class ConstantUtils {
         final public static String GET_ALL_USER_PROJECT = "getAllUserProject";
         final public static String CREATE_SECTION_REQUEST = "createSection";
         final public static String GET_USER_PROFILE = "getUserProfile";
+        final public static String SEND_OTP_REQUEST = "sendOTP";
+        final public static String VERIFY_OTP_REQUEST = "verifyOTP";
     }
 }
