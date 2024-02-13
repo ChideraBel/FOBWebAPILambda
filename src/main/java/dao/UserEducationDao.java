@@ -16,15 +16,14 @@ public class UserEducationDao {
     /*
    Gets all the education entities for the specified userId
     */
-    public List<DynamoDBUserEducation> getAllEducationEntitiesForUser(@NonNull final String userId) {
-        DynamoDBUserEducation education = new DynamoDBUserEducation();
-        education.setUser_id(userId);
+    public List<DynamoDBUserEducation> getAllUserEducation(@NonNull final String userId) {
+        DynamoDBUserEducation partitionKeyItem = new DynamoDBUserEducation();
+        partitionKeyItem.setUser_id(userId);
 
         DynamoDBQueryExpression<DynamoDBUserEducation> queryExpression = new DynamoDBQueryExpression<DynamoDBUserEducation>()
-                .withHashKeyValues(education);
+                .withHashKeyValues(partitionKeyItem);
 
-        final List<DynamoDBUserEducation> userEducationList = mapper.query(DynamoDBUserEducation.class, queryExpression);
-        return userEducationList;
+        return mapper.query(DynamoDBUserEducation.class, queryExpression);
     }
 
     /*
@@ -32,7 +31,7 @@ public class UserEducationDao {
      */
     public int getNextSequence(@NonNull final String userId) {
 
-        return getAllEducationEntitiesForUser(userId).size() + 1;
+        return getAllUserEducation(userId).size() + 1;
     }
 
     public Optional<DynamoDBUserEducation> getEducationEntityForUser(@NonNull final String userId,
@@ -40,7 +39,7 @@ public class UserEducationDao {
         return Optional.ofNullable(mapper.load(DynamoDBUserEducation.class, userId, educationId));
     }
 
-    public void save(DynamoDBUserEducation dynamoDBUserEducation) {
+    public void save(@NonNull final DynamoDBUserEducation dynamoDBUserEducation) {
         mapper.save(dynamoDBUserEducation);
     }
 

@@ -27,12 +27,12 @@ public class DeleteUserEducationLambda {
         final Optional<DynamoDBUserEducation> userEducationOptional = userEducationDao.getEducationEntityForUser(request.getEmail(), educationId);
 
         if (!userEducationOptional.isPresent()) {
-            return new ResponseMessage(ERROR, String.format("Education entity for user with email %s and education id %n does not exist",
+            return new ResponseMessage(ERROR, String.format("Education entity for user with email %s and education id %d does not exist",
                     request.getEmail(), educationId));
         }
 
         userEducationDao.deleteEducationEntityForUser(userEducationOptional.get());
 
-        return new ResponseMessage(SUCCESS, String.format("Education entity for user %s with id: %n has been deleted", request.getEmail(), educationId));
+        return new ResponseMessage(SUCCESS, String.format("Education entity for user %s with id: %d has been deleted", request.getEmail(), educationId));
     }
 }

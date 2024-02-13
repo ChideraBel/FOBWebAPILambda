@@ -13,7 +13,7 @@ public class GetSectionLambda {
 
     public GetSectionLambda(SectionDao sectionDao) {this.sectionDao = sectionDao;}
 
-    public GetSectionResponse getSectionResponse(Request request) {
+    public GetSectionResponse getSection(Request request) {
         final DynamoDBSection dynamoDBSection =  sectionDao.getSection(request.toString());
 
         final Section section = toSection(dynamoDBSection);

@@ -20,5 +20,4 @@ public class UserProfileDao {
     public void delete(DynamoDBUserProfile dynamoDBUserProfile) {
         mapper.delete(dynamoDBUserProfile);
     }
-
 }

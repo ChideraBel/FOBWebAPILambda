@@ -1,6 +1,5 @@
 package model;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,12 +10,11 @@ import lombok.NonNull;
 @Builder
 @Data
 @AllArgsConstructor
-public class Education {
+public class Experience {
     @NonNull
-    String institution;
-    String degreeType;
-    String major;
+    String company;
+    String role;
     String startDate;
     String endDate;
-    double gpa;
+    String jobDescription;
 }
