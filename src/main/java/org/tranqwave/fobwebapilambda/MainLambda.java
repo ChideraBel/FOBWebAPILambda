@@ -24,6 +24,7 @@ import model.DeleteUserRequest;
 import model.GetAllUserEducationRequest;
 import model.GetAllUserExperienceRequest;
 import model.GetAllUserSkillRequest;
+import model.GetSectionRequest;
 import model.LoginUserRequest;
 import model.Request;
 import model.UpdateEducationRequest;
@@ -161,7 +162,7 @@ public class MainLambda implements RequestHandler<Request, Object> {
             case CREATE_SECTION_REQUEST:
                 return createSectionLambda.createSection(CreateSectionRequest.fromMap(request.getRequestBody()));
             case GET_SECTION_REQUEST:
-                return getSectionLambda.getSection(request);
+                return getSectionLambda.getSection(GetSectionRequest.fromMap(request.getRequestBody()));
             case GET_ALL_SECTIONS_REQUEST:
                 return getAllSectionsLambda.getAllSections();
         }

@@ -2,6 +2,7 @@ package org.tranqwave.fobwebapilambda.section;
 
 import dao.SectionDao;
 import dao.dbModels.DynamoDBSection;
+import model.GetSectionRequest;
 import model.GetSectionResponse;
 import model.Request;
 import model.Section;
@@ -13,7 +14,7 @@ public class GetSectionLambda {
 
     public GetSectionLambda(SectionDao sectionDao) {this.sectionDao = sectionDao;}
 
-    public GetSectionResponse getSection(Request request) {
+    public GetSectionResponse getSection(GetSectionRequest request) {
         final DynamoDBSection dynamoDBSection =  sectionDao.getSection(request.toString());
 
         final Section section = toSection(dynamoDBSection);
