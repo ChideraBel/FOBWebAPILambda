@@ -73,13 +73,15 @@ public class SendOTPLambda {
         Content content = new Content("text/plain", String.format("Please enter your OTP registration code: %s", code));
         Mail mail = new Mail(from, subject, to, content);
 
-        SendGrid sg = new SendGrid(getSecret("AppBetaSendGridKeys"));
+        SendGrid sg = new SendGrid(getSecret("sendgrid_api_key"));
         Request request = new Request();
         try {
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
-            sg.api(request);
+            Response response = sg.api(request);
+            if(response.getBody().contains("error"))
+                return false;
         } catch (IOException ex) {
             return false;
         }
