@@ -16,7 +16,7 @@ public class SectionDao {
 
     private final DynamoDBMapper mapper;
 
-    public DynamoDBSection getSection(@NonNull final String sectionId) { return mapper.load(DynamoDBSection.class, sectionId);}
+    public DynamoDBSection getSection(@NonNull final int sectionId) { return mapper.load(DynamoDBSection.class, sectionId);}
 
     public void save(DynamoDBSection dynamoDBSection) { mapper.save(dynamoDBSection);}
 
