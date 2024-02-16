@@ -30,8 +30,14 @@ public class UserSkillDao {
     Gets the next sequence number for the skill ID under the specified userId
     */
     public int getNextSequence(@NonNull final String userId) {
+        DynamoDBUserSkill partitionKeyItem = new DynamoDBUserSkill();
+        partitionKeyItem.setUser_id(userId);
 
-        return getAllUserSkill(userId).size() + 1;
+        DynamoDBQueryExpression<DynamoDBUserSkill> queryExpression = new DynamoDBQueryExpression<DynamoDBUserSkill>()
+                .withHashKeyValues(partitionKeyItem)
+                .withScanIndexForward(false)
+                .withLimit(1);
+        return mapper.query(DynamoDBUserSkill.class, queryExpression).get(0).getSkill_id() + 1;
     }
 
     public Optional<DynamoDBUserSkill> getSkillEntityForUser(@NonNull final String userId,
