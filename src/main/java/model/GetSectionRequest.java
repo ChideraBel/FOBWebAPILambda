@@ -14,11 +14,11 @@ import java.util.Map;
 @AllArgsConstructor
 public class GetSectionRequest {
     @NonNull
-    String section_id;
+    int sectionId;
 
     public static GetSectionRequest fromMap(Map<String, String> map) {
         return GetSectionRequest.builder()
-                .section_id(map.get("sectionId"))
+                .sectionId(Integer.parseInt(map.get("sectionId")))
                 .build();
     }
 }
