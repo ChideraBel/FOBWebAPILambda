@@ -14,6 +14,7 @@ import lombok.NonNull;
 public class Education {
     @NonNull
     String institution;
+    String location;
     String degreeType;
     String major;
     String startDate;

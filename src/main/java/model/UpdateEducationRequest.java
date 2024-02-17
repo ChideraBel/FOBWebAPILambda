@@ -18,6 +18,7 @@ public class UpdateEducationRequest {
     @NonNull
     int educationId;
     String institution;
+    String location;
     String degreeType;
     String major;
     String startDate;
@@ -29,6 +30,7 @@ public class UpdateEducationRequest {
                 .email(map.get("email"))
                 .educationId(Integer.parseInt(map.get("educationId")))
                 .institution(map.get("institution"))
+                .location(map.get("location"))
                 .degreeType(map.get("degreeType"))
                 .major(map.get("major"))
                 .startDate(map.get("startDate"))
