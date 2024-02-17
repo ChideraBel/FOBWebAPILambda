@@ -8,11 +8,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import static utils.ConstantUtils.OPEN_AI_CHAT_URL;
+import static utils.ConstantUtils.OPEN_AI_MODEL;
+
 public class AIUtils {
-    private static String chatGPT(String prompt) {
-        String url = "https://api.openai.com/v1/chat/completions";
+    private static String callGPT(String prompt) {
+        String url = OPEN_AI_CHAT_URL;
         String apiKey = CredentialsUtils.getSecret("open_ai_api_key");
-        String model = "gpt-3.5-turbo";
+        String model = OPEN_AI_MODEL;
 
         try {
             URL obj = new URL(url);
@@ -58,6 +62,6 @@ public class AIUtils {
 
     public static String processPrompt(@NonNull final String prompt) {
 
-        return chatGPT(prompt);
+        return callGPT(prompt);
     }
 }

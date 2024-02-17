@@ -10,6 +10,8 @@ public class ConstantUtils {
     final public static String ERROR = "ERROR";
     final public static String SUCCESS = "SUCCESS";
     final public static String RESUME_BUCKET = "fob-resume-bucket";
+    final public static String OPEN_AI_CHAT_URL = "https://api.openai.com/v1/chat/completions";
+    final public static String OPEN_AI_MODEL = "gpt-3.5-turbo";
 
     public static class RequestTypes {
         final public static String LOGIN_USER_REQUEST = "loginUser";
