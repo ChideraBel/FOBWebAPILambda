@@ -30,8 +30,15 @@ public class UserProjectDao {
    Gets the next sequence number for the project ID under the specified userId
     */
     public int getNextSequence(@NonNull final String userId) {
+        DynamoDBUserProject partitionKeyItem = new DynamoDBUserProject();
+        partitionKeyItem.setUser_id(userId);
 
-        return getAllUserProjects(userId).size() + 1;
+        DynamoDBQueryExpression<DynamoDBUserProject> queryExpression = new DynamoDBQueryExpression<DynamoDBUserProject>()
+                .withHashKeyValues(partitionKeyItem)
+                .withScanIndexForward(false)
+                .withLimit(1);
+
+        return mapper.query(DynamoDBUserProject.class, queryExpression).get(0).getProject_id() + 1;
     }
 
     /*

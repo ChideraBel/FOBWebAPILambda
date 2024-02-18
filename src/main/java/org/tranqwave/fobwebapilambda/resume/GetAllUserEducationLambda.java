@@ -43,6 +43,7 @@ public class GetAllUserEducationLambda {
                 .institution(dynamoDBUserEducation.getInstitution_name())
                 .startDate(dynamoDBUserEducation.getStart_date())
                 .endDate(dynamoDBUserEducation.getEnd_date())
+                .location(dynamoDBUserEducation.getLocation())
                 .build();
     }
 }

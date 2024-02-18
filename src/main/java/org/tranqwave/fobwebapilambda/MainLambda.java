@@ -17,6 +17,7 @@ import dao.UserSkillDao;
 import model.AddEducationRequest;
 import model.AddProjectRequest;
 import model.AddSkillRequest;
+import model.ChatBotRequest;
 import model.CreateSectionRequest;
 import model.AddExperienceRequest;
 import model.CreateUserRequest;
@@ -25,6 +26,7 @@ import model.DeleteExperienceRequest;
 import model.DeleteProjectRequest;
 import model.DeleteSkillRequest;
 import model.DeleteUserRequest;
+import model.GenerateResumeRequest;
 import model.GetAllUserEducationRequest;
 import model.GetAllUserExperienceRequest;
 import model.GetAllUserProjectRequest;
@@ -38,6 +40,7 @@ import model.UpdateEducationRequest;
 import model.UpdateExperienceRequest;
 import model.UpdateProjectRequest;
 import model.UpdateSkillRequest;
+import org.tranqwave.fobwebapilambda.chatBot.ChatBotLambda;
 import org.tranqwave.fobwebapilambda.resume.AddUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.AddUserExperienceLambda;
 import org.tranqwave.fobwebapilambda.resume.AddUserProjectLambda;
@@ -53,6 +56,7 @@ import org.tranqwave.fobwebapilambda.resume.GetAllUserSkillLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserProjectLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserSkillLambda;
+import org.tranqwave.fobwebapilambda.resumeGen.GenerateResumeLambda;
 import org.tranqwave.fobwebapilambda.section.CreateSectionLambda;
 import org.tranqwave.fobwebapilambda.resume.UpdateUserExperienceLambda;
 import org.tranqwave.fobwebapilambda.section.GetAllSectionsLambda;
@@ -74,6 +78,7 @@ import static utils.ConstantUtils.RequestTypes.DELETE_USER_EXPERIENCE;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_PROJECT;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_REQUEST;
 import static utils.ConstantUtils.RequestTypes.DELETE_USER_SKILL;
+import static utils.ConstantUtils.RequestTypes.GENERATE_USER_RESUME;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_SECTIONS_REQUEST;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_EXPERIENCE;
@@ -81,6 +86,7 @@ import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_PROJECT;
 import static utils.ConstantUtils.RequestTypes.GET_ALL_USER_SKILL;
 import static utils.ConstantUtils.RequestTypes.GET_SECTION_REQUEST;
 import static utils.ConstantUtils.RequestTypes.LOGIN_USER_REQUEST;
+import static utils.ConstantUtils.RequestTypes.PROCESS_CHAT_BOT_PROMPT;
 import static utils.ConstantUtils.RequestTypes.SEND_OTP_REQUEST;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EXPERIENCE;
@@ -114,6 +120,8 @@ public class MainLambda implements RequestHandler<Request, Object> {
     private final DeleteUserProjectLambda deleteUserProjectLambda;
     private final UpdateUserProjectLambda updateUserProjectLambda;
     private final GetAllUserProjectLambda getAllUserProjectLambda;
+    private final ChatBotLambda chatBotLambda;
+    private final GenerateResumeLambda generateResumeLambda;
 
     public MainLambda() {
         final AmazonDynamoDB dynamoDBClient = AmazonDynamoDBClientBuilder.defaultClient();
@@ -152,6 +160,8 @@ public class MainLambda implements RequestHandler<Request, Object> {
         deleteUserProjectLambda = new DeleteUserProjectLambda(userProjectDao);
         updateUserProjectLambda = new UpdateUserProjectLambda(userProjectDao);
         getAllUserProjectLambda = new GetAllUserProjectLambda(userProjectDao);
+        chatBotLambda = new ChatBotLambda(userDao);
+        generateResumeLambda = new GenerateResumeLambda(userDao, userProfileDao, userEducationDao, userProjectDao, userSkillDao, userExperienceDao);
     }
 
     /*
@@ -209,6 +219,10 @@ public class MainLambda implements RequestHandler<Request, Object> {
                 return updateUserProjectLambda.updateProject(UpdateProjectRequest.fromMap(request.getRequestBody()), context);
             case GET_ALL_USER_PROJECT:
                 return getAllUserProjectLambda.getAllProjects(GetAllUserProjectRequest.fromMap(request.getRequestBody()), context);
+            case PROCESS_CHAT_BOT_PROMPT:
+                return chatBotLambda.processChatBotRequest(ChatBotRequest.fromMap(request.getRequestBody()), context);
+            case GENERATE_USER_RESUME:
+                return generateResumeLambda.generateResume(GenerateResumeRequest.fromMap(request.getRequestBody()), context);
         }
         throw new IllegalArgumentException(String.format("Bad request input request type: %s", request.getRequestType()));
     }

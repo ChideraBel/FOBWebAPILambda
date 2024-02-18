@@ -39,4 +39,7 @@ public class DynamoDBUserEducation {
 
     @DynamoDBAttribute(attributeName = "gpa")
     private double gpa;
+
+    @DynamoDBAttribute(attributeName = "institution_location")
+    private String location;
 }

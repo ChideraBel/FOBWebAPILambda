@@ -25,6 +25,7 @@ public class CreateUserRequest {
     String nationality;
     String profilePic;
     String visaExpDate;
+    String phoneNumber;
 
     public static CreateUserRequest fromMap(Map<String, String> map) {
         return CreateUserRequest.builder()
@@ -38,6 +39,7 @@ public class CreateUserRequest {
                 .nationality(map.get("nationality"))
                 .profilePic(map.get("profilePic"))
                 .visaExpDate(map.get("visaExpDate"))
+                .phoneNumber(map.get("phoneNumber"))
                 .build();
     }
 }

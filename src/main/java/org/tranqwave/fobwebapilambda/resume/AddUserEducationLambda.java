@@ -35,6 +35,7 @@ public class AddUserEducationLambda {
                 .user_id(request.getEmail())
                 .education_id(nextSeq)
                 .institution_name(request.getInstitution())
+                .location(request.getLocation())
                 .gpa(request.getGpa())
                 .major(request.getMajor())
                 .degree_type(request.getDegreeType())

@@ -35,4 +35,7 @@ public class DynamoDBUserProfile {
 
     @DynamoDBAttribute(attributeName = "visa_end_date")
     private String visa_end_date;
+
+    @DynamoDBAttribute(attributeName = "phone_number")
+    private String phone_number;
 }

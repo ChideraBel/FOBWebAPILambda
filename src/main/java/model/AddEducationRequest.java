@@ -16,6 +16,7 @@ public class AddEducationRequest {
     @NonNull
     String email;
     String institution;
+    String location;
     String degreeType;
     String major;
     String startDate;
@@ -26,6 +27,7 @@ public class AddEducationRequest {
         return AddEducationRequest.builder()
                 .email(map.get("email"))
                 .institution(map.get("institution"))
+                .location(map.get("location"))
                 .degreeType(map.get("degreeType"))
                 .major(map.get("major"))
                 .startDate(map.get("startDate"))
