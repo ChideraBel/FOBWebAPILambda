@@ -26,7 +26,6 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import utils.AIUtils;
-import utils.ConstantUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,11 +34,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Stack;
 
 import static utils.ConstantUtils.ERROR;
 import static utils.ConstantUtils.RESUME_BUCKET;
 import static utils.ConstantUtils.SUCCESS;
+import static utils.ConstantUtils.convertISOToMonthYear;
 
 public class GenerateResumeLambda {
     private final UserDao userDao;
@@ -89,7 +88,7 @@ public class GenerateResumeLambda {
             return new ResponseMessage(ERROR, e.getMessage());
         }
 
-        context.getLogger().log(String.format("Resume was successfully generated and stored in bucket: % for user: %", resume_url, request.getEmail()));
+        context.getLogger().log(String.format("Resume was successfully generated and stored in bucket: %s for user: %s", resume_url, request.getEmail()));
         return new ResponseMessage(SUCCESS, resume_url);
     }
 
@@ -113,8 +112,6 @@ public class GenerateResumeLambda {
         document.add(name);
         document.add(contact);
 
-        document.add(new Paragraph("\n"));
-
         generateSummary(document, dynamoDBUserEducations, dynamoDBUserSkills, dynamoDBUserExperiences, dynamoDBUserProjects, dynamoDBUserProfile.getIndustry());
         if (!dynamoDBUserExperiences.isEmpty()) generateExperience(document, dynamoDBUserExperiences);
         if (!dynamoDBUserProjects.isEmpty()) generateProject(document, dynamoDBUserProjects);
@@ -133,31 +130,31 @@ public class GenerateResumeLambda {
                                  final List<DynamoDBUserProject> dynamoDBUserProjects,
                                  final String industry) {
         final StringBuilder sb = new StringBuilder();
-        sb.append(String.format(ConstantUtils.ResumeGenPrompts.GEN_SUMMARY_PROMPT, industry));
+        sb.append(String.format(AIUtils.ResumeGenPrompts.GEN_SUMMARY_PROMPT, industry));
 
-        sb.append("Education: \n");
+        sb.append("Education: ");
         for (DynamoDBUserEducation education : dynamoDBUserEducations) {
-            sb.append(education.getDegree_type() + "," + education.getMajor() + "," + education.getInstitution_name() + "," + education.getStart_date() + "," + "-" + "," + education.getEnd_date() + "\n");
+            sb.append(education.getDegree_type() + ", " + education.getMajor() + ", " + education.getInstitution_name() + ", from " + education.getStart_date() + " - " + education.getEnd_date()+ ". ");
         }
 
-        sb.append("Experience: \n");
+        sb.append("Experience: ");
         for (DynamoDBUserExperience experience : dynamoDBUserExperiences) {
-            sb.append(experience.getRole() + "," + experience.getCompany_name() + "," + experience.getStart_date() + "," + "-" + "," + experience.getEnd_date() + experience.getDescription() + "\n");
+            sb.append(experience.getRole() + ", " + experience.getCompany_name() + ", from " + experience.getStart_date() + " - " + experience.getEnd_date() + ", " + experience.getDescription() + ". ");
         }
 
-        sb.append("Projects: \n");
+        sb.append("Projects: ");
         for (DynamoDBUserProject project : dynamoDBUserProjects) {
-            sb.append(project.getProject_title() + "," + project.getDescription() + "\n");
+            sb.append(project.getProject_title() + ", " + project.getDescription());
         }
 
-        sb.append("Skills: \n");
+        sb.append("Skills: ");
         for (DynamoDBUserSkill skill : dynamoDBUserSkills) {
-            sb.append(skill.getSkill_name());
+            sb.append(skill.getSkill_name() + ". ");
         }
 
         final String summaryText = AIUtils.processPrompt(sb.toString());
 
-        final Paragraph summaryHeading = new Paragraph("Professional Summary")
+        final Paragraph summaryHeading = new Paragraph("PROFESSIONAL SUMMARY")
                 .setBold();
         final Paragraph summary = new Paragraph(summaryText);
         doc.add(summaryHeading);
@@ -165,16 +162,31 @@ public class GenerateResumeLambda {
     }
 
     private void generateExperience(Document doc, final List<DynamoDBUserExperience> dynamoDBUserExperiences) {
-        final Paragraph experienceHeading = new Paragraph("Professional Experience")
+        final Paragraph experienceHeading = new Paragraph("PROFESSIONAL EXPERIENCE")
                 .setBold();
         doc.add(experienceHeading);
 
         for (DynamoDBUserExperience experience : dynamoDBUserExperiences) {
-            final Paragraph experience1 = new Paragraph(String.format("%s at %, %s-%s",
-                    experience.getRole(), experience.getCompany_name(), experience.getStart_date(), experience.getEnd_date()))
+            final String startDate = convertISOToMonthYear(experience.getStart_date());
+            final String endDate = convertISOToMonthYear(experience.getEnd_date());
+            final String apiResponse = AIUtils.processPrompt(
+                    String.format(AIUtils.ResumeGenPrompts.GEN_EXPERIENCE_PROMPT, experience.getDescription()));
+            final String[] points = postProcessExperience(apiResponse);
+
+            final Paragraph experienceSub = new Paragraph(String.format("%s at %s, %s - %s",
+                    experience.getRole(), experience.getCompany_name(), startDate, endDate))
                     .setItalic()
-                    .add("\n" + AIUtils.processPrompt(String.format(ConstantUtils.ResumeGenPrompts.GEN_EXPERIENCE_PROMPT, experience.getDescription())));
-            doc.add(experience1);
+                    .setBold();
+            final com.itextpdf.layout.element.List pointsItem = new com.itextpdf.layout.element.List()
+                    .setSymbolIndent(12)
+                    .setListSymbol("\u2022");
+
+            for(String point: points){
+                pointsItem.add(point+".");
+            }
+
+            doc.add(experienceSub);
+            doc.add(pointsItem);
         }
     }
 
@@ -182,24 +194,26 @@ public class GenerateResumeLambda {
         final Paragraph projectHeading = new Paragraph("Projects")
                 .setBold();
         doc.add(projectHeading);
-        com.itextpdf.layout.element.List projects = new com.itextpdf.layout.element.List()
+        final com.itextpdf.layout.element.List projects = new com.itextpdf.layout.element.List()
                 .setSymbolIndent(12)
                 .setListSymbol("\u2022");
         for (DynamoDBUserProject project : dynamoDBUserProjects) {
-            projects.add(project.getProject_title() + ": " + AIUtils.processPrompt(String.format(ConstantUtils.ResumeGenPrompts.GEN_PROJECT_PROMPT, project.getDescription())) +
-                    String.format("(%s-%s)", project.getStart_date(), project.getEnd_date()));
+            final String startDate = convertISOToMonthYear(project.getStart_date());
+            final String endDate = convertISOToMonthYear(project.getEnd_date());
+            projects.add(project.getProject_title() + ": " + AIUtils.processPrompt(String.format(AIUtils.ResumeGenPrompts.GEN_PROJECT_PROMPT, project.getDescription())) +
+                    String.format("(%s - %s)", startDate, endDate));
         }
         doc.add(projectHeading);
         doc.add(projects);
     }
 
     private void generateEducation(Document doc, final List<DynamoDBUserEducation> dynamoDBUserEducations) {
-        final Paragraph experienceHeading = new Paragraph("Education")
+        final Paragraph experienceHeading = new Paragraph("EDUCATION")
                 .setBold();
         doc.add(experienceHeading);
 
         for (DynamoDBUserEducation education : dynamoDBUserEducations) {
-            final Paragraph education1 = new Paragraph(String.format("%s %s-%s, %s", education.getInstitution_name(), education.getStart_date(), education.getEnd_date(), education.getLocation()))
+            final Paragraph education1 = new Paragraph(String.format("%s (%s - %s), %s", education.getInstitution_name(), education.getStart_date(), education.getEnd_date(), education.getLocation()))
                     .setItalic()
                     .add("\n" + education.getDegree_type() + " in " + education.getMajor());
             doc.add(education1);
@@ -207,7 +221,7 @@ public class GenerateResumeLambda {
     }
 
     private void generateSkills(Document doc, final List<DynamoDBUserSkill> dynamoDBUserSkills) {
-        final Paragraph experienceHeading = new Paragraph("Skills")
+        final Paragraph experienceHeading = new Paragraph("SKILLS")
                 .setBold();
         doc.add(experienceHeading);
 
@@ -233,5 +247,12 @@ public class GenerateResumeLambda {
 
         s3.putObject(objectRequest, RequestBody.fromBytes(baos.toByteArray()));
         return "https://" + bucketName + ".s3." + Region.US_EAST_2.toString() + ".amazonaws.com/" + fileKey;
+    }
+
+    //To ensure that the format of the API response is tweaked to the format needed for the resume.
+    private String[] postProcessExperience(String apiExperienceRes) {
+        final String regex = "-([a-zA-Z])";
+        final String input = apiExperienceRes.replaceAll("\\n", "").replaceAll(regex, "$1");
+        return input.split("\\.");
     }
 }
