@@ -5,6 +5,11 @@ import dao.dbModels.DynamoDBUserProject;
 import model.Project;
 import model.Section;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ConstantUtils {
 
     final public static String ERROR = "ERROR";
@@ -12,6 +17,7 @@ public class ConstantUtils {
     final public static String RESUME_BUCKET = "fob-resume-bucket";
     final public static String OPEN_AI_CHAT_URL = "https://api.openai.com/v1/chat/completions";
     final public static String OPEN_AI_MODEL = "gpt-3.5-turbo";
+    final public static String MONTH_YEAR_FORMAT = "MM/yyyy";
 
     public static class RequestTypes {
         final public static String LOGIN_USER_REQUEST = "loginUser";
@@ -43,13 +49,6 @@ public class ConstantUtils {
         final public static String GET_USER_PROFILE = "getUserProfile";
     }
 
-    public static class ResumeGenPrompts {
-        final public static String GEN_SUMMARY_PROMPT = "Based on the following details, create a professional summary for my resume,"+
-        "\nPlease craft a summary that highlights my professional background, key achievements, and skills, suitable for a senior position in %s industry. Just give me summary straight up";
-        final public static String GEN_EXPERIENCE_PROMPT = "Here is my professional experience description: %s write this better for me. Just give me the improved description straight up";
-        final public static String GEN_PROJECT_PROMPT = "Here is my project description: %s write this better for me. Just give me the improved description straight up";
-    }
-
     public static Section toSection(DynamoDBSection dynamoDBSection) {
         return Section.builder()
                 .section_id(dynamoDBSection.getSection_id())
@@ -68,5 +67,16 @@ public class ConstantUtils {
                 .techUsed(dynamoDBUserProject.getTechnologies_used())
                 .endDate(dynamoDBUserProject.getEnd_date())
                 .build();
+    }
+    public static String convertISOToMonthYear(String isoDateString){
+        try {
+            DateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            Date date = isoDateFormat.parse(isoDateString);
+
+            DateFormat monthYearFormat = new SimpleDateFormat(MONTH_YEAR_FORMAT);
+            return monthYearFormat.format(date);
+        } catch (ParseException e) {
+            return "";
+        }
     }
 }
