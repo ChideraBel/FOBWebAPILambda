@@ -40,6 +40,7 @@ public class ConstantUtils {
         final public static String VERIFY_OTP_REQUEST = "verifyOTP";
         final public static String PROCESS_CHAT_BOT_PROMPT = "processChatBotPrompt";
         final public static String GENERATE_USER_RESUME = "generateUserResume";
+        final public static String GET_USER_PROFILE = "getUserProfile";
     }
 
     public static class ResumeGenPrompts {
