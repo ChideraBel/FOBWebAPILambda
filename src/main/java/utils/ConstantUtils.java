@@ -47,6 +47,7 @@ public class ConstantUtils {
         final public static String PROCESS_CHAT_BOT_PROMPT = "processChatBotPrompt";
         final public static String GENERATE_USER_RESUME = "generateUserResume";
         final public static String GET_USER_PROFILE = "getUserProfile";
+        final public static String UPDATE_USER_PROFILE = "updateUserProfile";
     }
 
     public static Section toSection(DynamoDBSection dynamoDBSection) {

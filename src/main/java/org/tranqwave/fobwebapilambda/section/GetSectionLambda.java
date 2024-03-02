@@ -5,7 +5,6 @@ import dao.SectionDao;
 import dao.dbModels.DynamoDBSection;
 import model.GetSectionRequest;
 import model.GetSectionResponse;
-import model.Request;
 import model.Section;
 
 import static utils.ConstantUtils.toSection;

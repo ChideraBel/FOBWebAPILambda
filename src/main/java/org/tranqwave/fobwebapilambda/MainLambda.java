@@ -41,6 +41,8 @@ import model.UpdateEducationRequest;
 import model.UpdateExperienceRequest;
 import model.UpdateProjectRequest;
 import model.UpdateSkillRequest;
+import model.UpdateUserProfileRequest;
+
 import org.tranqwave.fobwebapilambda.chatBot.ChatBotLambda;
 import org.tranqwave.fobwebapilambda.resume.AddUserEducationLambda;
 import org.tranqwave.fobwebapilambda.resume.AddUserExperienceLambda;
@@ -68,6 +70,7 @@ import org.tranqwave.fobwebapilambda.user.GetUserProfileLambda;
 import org.tranqwave.fobwebapilambda.user.LoginUserLambda;
 import org.tranqwave.fobwebapilambda.user.OTPVerificationLambda;
 import org.tranqwave.fobwebapilambda.user.SendOTPLambda;
+import org.tranqwave.fobwebapilambda.user.UpdateUserProfileLambda;
 
 import static utils.ConstantUtils.RequestTypes.ADD_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.ADD_USER_PROJECT;
@@ -93,6 +96,7 @@ import static utils.ConstantUtils.RequestTypes.PROCESS_CHAT_BOT_PROMPT;
 import static utils.ConstantUtils.RequestTypes.SEND_OTP_REQUEST;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EDUCATION;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_EXPERIENCE;
+import static utils.ConstantUtils.RequestTypes.UPDATE_USER_PROFILE;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_PROJECT;
 import static utils.ConstantUtils.RequestTypes.UPDATE_USER_SKILL;
 import static utils.ConstantUtils.RequestTypes.VERIFY_OTP_REQUEST;
@@ -126,6 +130,7 @@ public class MainLambda implements RequestHandler<Request, Object> {
     private final ChatBotLambda chatBotLambda;
     private final GenerateResumeLambda generateResumeLambda;
     private final GetUserProfileLambda getUserProfileLambda;
+    private final UpdateUserProfileLambda updateUserProfileLambda;
 
     public MainLambda() {
         final AmazonDynamoDB dynamoDBClient = AmazonDynamoDBClientBuilder.defaultClient();
@@ -167,6 +172,7 @@ public class MainLambda implements RequestHandler<Request, Object> {
         chatBotLambda = new ChatBotLambda(userDao);
         generateResumeLambda = new GenerateResumeLambda(userDao, userProfileDao, userEducationDao, userProjectDao, userSkillDao, userExperienceDao);
         getUserProfileLambda = new GetUserProfileLambda(userProfileDao);
+        updateUserProfileLambda = new UpdateUserProfileLambda(userProfileDao);
     }
 
     /*
@@ -230,6 +236,8 @@ public class MainLambda implements RequestHandler<Request, Object> {
                 return generateResumeLambda.generateResume(GenerateResumeRequest.fromMap(request.getRequestBody()), context);
             case GET_USER_PROFILE:
                 return getUserProfileLambda.getUserProfile(GetUserProfileRequest.fromMap(request.getRequestBody()), context);
+            case UPDATE_USER_PROFILE:
+                return updateUserProfileLambda.updateUserProfile(UpdateUserProfileRequest.fromMap(request.getRequestBody()), context);
         }
         throw new IllegalArgumentException(String.format("Bad request input request type: %s", request.getRequestType()));
     }
