@@ -41,6 +41,7 @@ public class CreateUserLambda {
         //Trying to simplify register process, avoiding overwhelming set up.
         final DynamoDBUserProfile newUserProfile = DynamoDBUserProfile.builder()
                 .user_id(request.getEmail())
+                .industry(request.getIndustry())
                 .build();
 
         userProfileDao.save(newUserProfile);
