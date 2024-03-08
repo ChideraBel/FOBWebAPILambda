@@ -38,15 +38,10 @@ public class CreateUserLambda {
         final DynamoDBUser newUser = new DynamoDBUser(request.getEmail(), request.getPassword(), request.getFullName(), currentDate, currentDate);
         userDao.save(newUser);
 
+        //Trying to simplify register process, avoiding overwhelming set up.
         final DynamoDBUserProfile newUserProfile = DynamoDBUserProfile.builder()
                 .user_id(request.getEmail())
-                .profile_picture(request.getProfilePic())
-                .address(request.getAddress())
                 .industry(request.getIndustry())
-                .date_of_birth(request.getDob())
-                .employment(request.getEmployment())
-                .nationality(request.getNationality())
-                .visa_end_date(request.getVisaExpDate())
                 .build();
 
         userProfileDao.save(newUserProfile);

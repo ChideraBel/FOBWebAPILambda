@@ -23,14 +23,15 @@ public class UpdateUserProfileLambda {
 
         final DynamoDBUserProfile dynamoDBUserProfile = userProfileDao.getUserProfile(userId);
         if(userProfileDao == null){
-            return new ResponseMessage(ERROR, String.format(" User profile with email %s does not exist.", userId));
+            return new ResponseMessage(ERROR, String.format("User profile with email %s does not exist.", userId));
         }
         dynamoDBUserProfile.setAddress(request.getAddress());
         dynamoDBUserProfile.setDate_of_birth(request.getDob());
         dynamoDBUserProfile.setEmployment(request.getEmploymentStatus());
         dynamoDBUserProfile.setIndustry(request.getIndustry());
         dynamoDBUserProfile.setNationality(request.getNationality());
-        dynamoDBUserProfile.setVisa_end_date(request.getVisaExpiration());;
+        dynamoDBUserProfile.setVisa_end_date(request.getVisaExpiration());
+        dynamoDBUserProfile.setPhone_number(request.getPhoneNumber());
         dynamoDBUserProfile.setProfile_picture(request.getProfilePic());
 
         userProfileDao.save(dynamoDBUserProfile);

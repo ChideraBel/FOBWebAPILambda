@@ -23,6 +23,7 @@ public class UpdateUserProfileRequest {
     String nationality;
     String profilePic;
     String visaExpiration;
+    String phoneNumber;
 
     public static UpdateUserProfileRequest fromMap(Map<String, String> map){
         return UpdateUserProfileRequest.builder()
@@ -34,6 +35,7 @@ public class UpdateUserProfileRequest {
                 .nationality(map.get("nationality"))
                 .profilePic(map.get("profilePic"))
                 .visaExpiration(map.get("visaExpiration"))
+                .phoneNumber(map.get("phoneNumber"))
                 .build();
     }
 }
