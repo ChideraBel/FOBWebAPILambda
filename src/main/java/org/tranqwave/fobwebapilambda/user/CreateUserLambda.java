@@ -47,6 +47,7 @@ public class CreateUserLambda {
                 .employment(request.getEmployment())
                 .nationality(request.getNationality())
                 .visa_end_date(request.getVisaExpDate())
+                .phone_number(request.getPhoneNumber())
                 .build();
 
         userProfileDao.save(newUserProfile);

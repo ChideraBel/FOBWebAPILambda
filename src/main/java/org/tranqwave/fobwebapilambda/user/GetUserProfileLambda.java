@@ -16,7 +16,6 @@ public class GetUserProfileLambda {
         this.userProfileDao = userProfileDao;
     }
 
-
     public GetUserProfileResponse getUserProfile(@NonNull final GetUserProfileRequest request, Context context) {
         final DynamoDBUserProfile dynamoDBUserProfile = userProfileDao.getUserProfile(request.getEmail());
         
